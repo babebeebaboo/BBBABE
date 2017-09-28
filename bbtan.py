@@ -2,7 +2,7 @@ import arcade
 from modelsBBTAN import World
 
 SCREEN_WIDTH = 600
-SCREEN_HEIGHT = 600
+SCREEN_HEIGHT = 800
 
 
 class ModelSprite(arcade.Sprite):
@@ -23,7 +23,7 @@ class SpaceGameWindow(arcade.Window):
         super().__init__(width,height)
         arcade.set_background_color(arcade.color.BLACK)
         self.world = World(width, height)
-        self.ball_sprite = ModelSprite('images/ship.png',model=self.world.ball)
+        self.ball_sprite = ModelSprite('images/ball.png',model=self.world.ball)
 
     def on_draw(self):
         arcade.start_render()
