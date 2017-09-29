@@ -27,7 +27,7 @@ class Ball(Model):
         self.radius = size/2
 
     def shoot(self,angle):
-        maxspeed = 15
+        maxspeed = 40
         self.vx = ( 90 - angle ) /90 *maxspeed
         if angle >=0 and angle <=90:
             self.vy = angle / 90 * maxspeed
@@ -55,7 +55,7 @@ class World:
         self.height = height
 
         self.ball = Ball(self,300,20,0,0,30)
-        self.arrow = Arrow(self,300,20,0,0,179,2)
+        self.arrow = Arrow(self,300,20,0,0,179,1)
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.SPACE:
