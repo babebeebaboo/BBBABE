@@ -1,5 +1,5 @@
 import arcade
-from modelsBBTAN import World
+from modelsBBBABE import World
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
@@ -14,6 +14,8 @@ class ModelSprite(arcade.Sprite):
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
+            self.angle = self.model.angle
+
     def draw(self):
         self.sync_with_model()
         super().draw()
@@ -24,9 +26,11 @@ class SpaceGameWindow(arcade.Window):
         arcade.set_background_color(arcade.color.BLACK)
         self.world = World(width, height)
         self.ball_sprite = ModelSprite('images/ball.png',model=self.world.ball)
+        self.arrow_sprite = ModelSprite('images/arrow.png',model=self.world.arrow)
 
     def on_draw(self):
         arcade.start_render()
+        self.arrow_sprite.draw()
         self.ball_sprite.draw()
     def update(self,delta):
         self.world.update(delta)
