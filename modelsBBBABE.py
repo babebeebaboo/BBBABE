@@ -60,8 +60,10 @@ class Ball(Model):
         
         if (self.y < self.radius) or (self.y > self.world.height-self.radius):
             self.vy = - self.vy
+
         self.x += self.vx
         self.y += self.vy
+
         if self.y < 20 :
             self.x = 300
             self.y = 20
@@ -73,14 +75,15 @@ class World:
     def __init__(self,width,height):
         self.width = width
         self.height = height
+        self.ball = Ball(self,300,20,0,0,20)
+        self.arrow = Arrow(self,300,20,0,0,179,1)
         self.blockslocation = GenerateBlock()
         self.blocks = []
         for j in range(0,8):
             for i in range(0,16):
                 block = Block(self,j*60+30+60,i*30+15 +270,self.blockslocation[i][j])
                 self.blocks.append(block)
-        self.ball = Ball(self,300,20,0,0,20)
-        self.arrow = Arrow(self,300,20,0,0,179,1)
+        
 
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.SPACE and self.ball.running == False:
@@ -89,16 +92,15 @@ class World:
     def update(self,delta):
         self.ball.update(delta)
         self.arrow.update(delta)
-
+        hit=0
         for block in self.blocks:
             block.update(delta)
             hitSizeX = 30 + self.ball.radius
             hitSizeY = 15 + self.ball.radius
-            hit=0
             if self.ball.hit(block, hitSizeX ,hitSizeY):
                 hit+=1
                 block.y=0
                 block.x=0
-            if hit>0:
-                self.ball.vx *=-1
-                self.ball.vy *=-1
+        if hit>0:
+            self.ball.vx *=-1
+            self.ball.vy *=-1
