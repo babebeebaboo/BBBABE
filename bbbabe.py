@@ -23,15 +23,22 @@ class ModelSprite(arcade.Sprite):
 class SpaceGameWindow(arcade.Window):
     def __init__(self,width,height):
         super().__init__(width,height)
-        arcade.set_background_color(arcade.color.BLACK)
+        arcade.set_background_color(arcade.color.WHITE)
         self.world = World(width, height)
         self.ball_sprite = ModelSprite('images/ball.png',model=self.world.ball)
         self.arrow_sprite = ModelSprite('images/arrow.png',model=self.world.arrow)
-
+        self.block_sprite = []
+        for block in self.world.blocks:
+            self.block_sprite.append(ModelSprite('images/block.png',model=block))
+            
     def on_draw(self):
         arcade.start_render()
+        
+        for block in self.block_sprite:
+            block.draw()
         self.arrow_sprite.draw()
         self.ball_sprite.draw()
+
     def update(self,delta):
         self.world.update(delta)
     def on_key_press(self,key,key_modifiers):
