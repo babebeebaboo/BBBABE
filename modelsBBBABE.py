@@ -13,7 +13,7 @@ class Model:
         return (abs(self.x - other.x) <= hit_sizeX) and (abs(self.y - other.y) <= hit_sizeY)
 
 def GenerateBlock():
-    return [[randint(0,3) for x in range(0,8)] for y in range(17)]
+    return [[randint(0,10) for x in range(0,8)] for y in range(17)]
 
 class Block(Model):
     def __init__(self,world,x,y,hp,vx=0,vy=0,angle=0):
@@ -77,12 +77,16 @@ class World:
         self.height = height
         self.ball = Ball(self,300,20,0,0,20)
         self.arrow = Arrow(self,300,20,0,0,179,1)
-        self.blockslocation = GenerateBlock()
+        self.blockshp = GenerateBlock()
         self.blocks = []
+        self.score =0
         for j in range(0,8):
             for i in range(0,16):
-                block = Block(self,j*60+30+60,i*30+15 +270,self.blockslocation[i][j])
-                self.blocks.append(block)
+                if self.blockshp[i][j] >0 :
+                    block = Block(self,j*60+30+60,i*30+15 +270,self.blockshp[i][j])
+                    self.blocks.append(block)
+        self.noOfBlock = len( self.blocks)
+        
         
 
     def on_key_press(self, key, key_modifiers):
@@ -101,6 +105,7 @@ class World:
                 hit+=1
                 block.y=0
                 block.x=0
+                self.score += 1
         if hit>0:
             self.ball.vx *=-1
             self.ball.vy *=-1
