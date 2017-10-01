@@ -4,7 +4,6 @@ from modelsBBBABE import World
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 
-
 class ModelSprite(arcade.Sprite):
     def __init__(self, *args, **kwargs):
         self.model = kwargs.pop('model', None)
@@ -59,13 +58,9 @@ class SpaceGameWindow(arcade.Window):
         arcade.start_render()
         
         for block in self.block_sprite:
-            #arcade.draw_text(str( self.blockshp[i][j] ), j*60+30+60, i*30+15 +270 ,arcade.color.WHITE)
             block.draw()
             block = ModelSprite(block.image,model=block)
             block.draw()
-            
-            
-            #arcade.draw_text(str(block.hp),block.x,block.y,arcade.color.WHITE)
 
         self.arrow_sprite.draw()
         self.ball_sprite.draw()
@@ -81,7 +76,6 @@ class SpaceGameWindow(arcade.Window):
         self.world.update(delta)
     def on_key_press(self,key,key_modifiers):
         self.world.on_key_press(key,key_modifiers)
-
 
 if __name__ == '__main__':
     windows = SpaceGameWindow(SCREEN_WIDTH,SCREEN_HEIGHT)

@@ -70,9 +70,7 @@ class Arrow(Model):
         self.angle += self.move 
         if self.angle <= 0+5 or self.angle >= 180-5: 
             self.move *= -1
-        
        # print(self.angle)
-        
 
 class Ball(Model):
     def __init__(self,world,x,y,vx,vy,size,running = False):
@@ -83,7 +81,7 @@ class Ball(Model):
 
     def shoot(self,angle):
         self.running = True
-        maxspeed = 10
+        maxspeed = 20
         if angle == 180:
             angle -= 1
         if angle == 0:
@@ -94,7 +92,6 @@ class Ball(Model):
         else :
             self.vy = (180 - angle) / 90 * maxspeed
 
-        
     def update(self,delta):
         
         if (self.x < self.radius) or (self.x > self.world.width-self.radius):
@@ -116,7 +113,6 @@ class Ball(Model):
             self.vx = 0
             self.vy = 0
             self.running = False
-        
             
         if not self.running :
             return self.x
@@ -137,14 +133,10 @@ class World:
             for i in range(0,16):
                 if self.blockshp[i][j] > 0 :
                     block = Block(self,j*60+30+60,i*30+15 +270,self.blockshp[i][j])
-
                     
                     self.blocks.append(block)
         self.noOfBlock = len( self.blocks)
         
-        
-
-
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.SPACE and self.ball.running == False:
             self.ball.shoot(self.arrow.angle)
@@ -159,8 +151,7 @@ class World:
             if on_key_release( arcade.key.LEFT ):
                 break
             self.arrow.update(1)
-        '''
-            
+        '''            
     def update(self,delta):
         arrowPlace = self.ball.update(delta)
         if arrowPlace != -1:
@@ -178,8 +169,6 @@ class World:
             if self.ball.hit(block,hitSizeX,hitSizeY) :
                 if math.atan2(abs(block.y - self.ball.y) , abs(block.x - self.ball.x) ) >= 0.5:
                     changeY += 1
-
-                   
 
                 if math.atan2(abs(block.y - self.ball.y) , abs(block.x - self.ball.x) ) < 0.5 :
                     changeX += 1
@@ -213,4 +202,3 @@ class World:
             self.ball.vx *=-1
             self.ball.vy *=-1
             '''
-        
