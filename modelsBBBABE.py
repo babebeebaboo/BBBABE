@@ -66,9 +66,11 @@ class Arrow(Model):
         super().__init__(world,x,y,vx,vy,angle)
         self.move = move
     def update(self,delta):
-        self.angle += self.move
-        if self.angle <= 0 or self.angle >= 180: 
+        
+        self.angle += self.move 
+        if self.angle <= 0+5 or self.angle >= 180-5: 
             self.move *= -1
+        
        # print(self.angle)
         
 
@@ -81,7 +83,7 @@ class Ball(Model):
 
     def shoot(self,angle):
         self.running = True
-        maxspeed = 20
+        maxspeed = 10
         if angle == 180:
             angle -= 1
         if angle == 0:
@@ -105,29 +107,32 @@ class Ball(Model):
         self.y += self.vy
 
         if self.y < 20 :
-            if self.x <0:
-                self.x=0
-            if self.x > 600:
-                self.x=600
+            if self.x < self.radius:
+                self.x = self.radius
+            if self.x > 600 - self.radius:
+                self.x = 600 - self.radius
+            
             self.y = 20
             self.vx = 0
             self.vy = 0
             self.running = False
+        
             
         if not self.running :
             return self.x
         else :
             return -1
-
+        
 class World:
     def __init__(self,width,height):
         self.width = width
         self.height = height
         self.ball = Ball(self,300,20,0,0,20)
-        self.arrow = Arrow(self,300,20,0,0,179,1)
+        self.arrow = Arrow(self,300,20,0,0,179-5,1)
         self.blockshp = GenerateBlock()
         self.blocks = []
-        self.score =0
+        self.breakBlock =0
+        self.score = 0
         for j in range(0,8):
             for i in range(0,16):
                 if self.blockshp[i][j] > 0 :
@@ -139,11 +144,22 @@ class World:
         
         
 
+
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.SPACE and self.ball.running == False:
             self.ball.shoot(self.arrow.angle)
             print ( str(self.ball.vx) + " "+str(self.ball.vy) )
-            
+            self.score += 1
+        '''
+        while key == arcade.key.LEFT:
+            if on_key_release( arcade.key.LEFT ):
+                break
+            self.arrow.update(-1)
+        while key == arcade.key.RIGHT:
+            if on_key_release( arcade.key.LEFT ):
+                break
+            self.arrow.update(1)
+        '''
             
     def update(self,delta):
         arrowPlace = self.ball.update(delta)
@@ -162,17 +178,22 @@ class World:
             if self.ball.hit(block,hitSizeX,hitSizeY) :
                 if math.atan2(abs(block.y - self.ball.y) , abs(block.x - self.ball.x) ) >= 0.5:
                     changeY += 1
+
+                   
+
                 if math.atan2(abs(block.y - self.ball.y) , abs(block.x - self.ball.x) ) < 0.5 :
                     changeX += 1
-                print ( "X= "+str(self.ball.x) + " "+str(block.x) +" "+ str( abs(block.x - self.ball.x) ) )
-                print("Y= "+str(self.ball.y) + " "+str(block.y)+" "+ str( abs(block.y - self.ball.y) ) )
+                    ###self.ball.x = min( block.y - self.ball.y)
+
+                print ( "X "+"Ball: "+str(self.ball.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.ball.x) ) )
+                print("Y "+"Ball: "+str(self.ball.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.ball.y) ) )
                 print("Atan = " + str( math.atan2(abs(block.y - self.ball.y) , abs(block.x - self.ball.x) ) ))
                 hit+=1
                 block.hp -= 1
                 if block.hp <=0:
                     block.y=-100
                     block.x=-100
-                    self.score += 1
+                    self.breakBlock += 1
         if hit>0:
             '''
             if (self.x < self.radius) or (self.x > self.world.width-self.radius):
@@ -183,6 +204,7 @@ class World:
             '''
             if changeX >0:
                 self.ball.vx *= -1
+                
             if changeY >0:
                 self.ball.vy *= -1
             print ( str(self.ball.vx) + " "+str(self.ball.vy) )

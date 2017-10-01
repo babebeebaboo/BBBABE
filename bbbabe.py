@@ -69,11 +69,12 @@ class SpaceGameWindow(arcade.Window):
 
         self.arrow_sprite.draw()
         self.ball_sprite.draw()
-        arcade.draw_text(str(self.world.noOfBlock),
-                         self.width - 60, self.height - 30,
-                         arcade.color.BLUE, 20)
-        arcade.draw_text(str(self.world.score),
+        arcade.draw_text(str(self.world.noOfBlock - self.world.breakBlock),
                          self.width - 60, self.height - 60,
+                         arcade.color.BLUE, 20)
+        
+        arcade.draw_text(str(self.world.score),
+                         self.width - 60, self.height - 30,
                          arcade.color.BLUE, 20)
 
     def update(self,delta):
