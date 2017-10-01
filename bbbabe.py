@@ -10,11 +10,35 @@ class ModelSprite(arcade.Sprite):
         self.model = kwargs.pop('model', None)
  
         super().__init__(*args, **kwargs)
+        self.x = self.model.x
+        self.y = self.model.y
+        self.hp = self.model.hp
+        self.image = ""
+        if self.hp == 0 :
+            self.image = "images/blockwhite.png"
+        if self.hp == 1 :
+            self.image = "images/block1.png"
+        if self.hp == 2 :
+            self.image = "images/block2.png"
+        if self.hp == 3 :
+            self.image = "images/block3.png"
  
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
+            
             self.angle = self.model.angle
+
+            self.hp = self.model.hp
+            self.image = ""
+            if self.hp == 0 :
+                self.image = "images/blockwhite.png"
+            if self.hp == 1 :
+                self.image = "images/block1.png"
+            if self.hp == 2 :
+                self.image = "images/block2.png"
+            if self.hp == 3 :
+                self.image = "images/block3.png"
 
     def draw(self):
         self.sync_with_model()
@@ -26,16 +50,23 @@ class SpaceGameWindow(arcade.Window):
         arcade.set_background_color(arcade.color.WHITE)
         self.world = World(width, height)
         self.ball_sprite = ModelSprite('images/ball.png',model=self.world.ball)
-        self.arrow_sprite = ModelSprite('images/arrow.png',model=self.world.arrow)
+        self.arrow_sprite = ModelSprite('images/arrow1.png',model=self.world.arrow)
         self.block_sprite = []
         for block in self.world.blocks:
-            self.block_sprite.append(ModelSprite('images/block.png',model=block))
+            self.block_sprite.append(ModelSprite(block.image,model=block))
             
     def on_draw(self):
         arcade.start_render()
         
         for block in self.block_sprite:
+            #arcade.draw_text(str( self.blockshp[i][j] ), j*60+30+60, i*30+15 +270 ,arcade.color.WHITE)
             block.draw()
+            block = ModelSprite(block.image,model=block)
+            block.draw()
+            
+            
+            #arcade.draw_text(str(block.hp),block.x,block.y,arcade.color.WHITE)
+
         self.arrow_sprite.draw()
         self.ball_sprite.draw()
         arcade.draw_text(str(self.world.noOfBlock),
