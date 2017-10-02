@@ -145,15 +145,15 @@ class World:
             self.score += 1
         
         if key == arcade.key.LEFT:
-                self.arrow.move = 1
+            self.arrow.move = 1
         if key == arcade.key.RIGHT:
-                self.arrow.move = -1
+            self.arrow.move = -1
 
     def on_key_release(self, key, key_modifiers):
         if not key == arcade.key.LEFT:
-                self.arrow.move = 0
+            self.arrow.move = 0
         if not key == arcade.key.RIGHT:
-                self.arrow.move = 0
+            self.arrow.move = 0
                     
     def update(self,delta):
         arrowPlace = self.ball.update(delta)
