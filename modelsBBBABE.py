@@ -12,8 +12,15 @@ class Model:
         self.world = world
         self.angle = angle
         self.hp = hp
-    def hit(self,other,hit_sizeX,hit_sizeY):
+    def hit(self,other):
+        hit_sizeX = 30 + self.radius
+        hit_sizeY = 15 + self.radius
         return (abs(self.x - other.x) <= hit_sizeX) and (abs(self.y - other.y) <= hit_sizeY)
+        
+    def ballHitBlock(self,other):
+        DeltaX = self.x - max(other.x, min(self.x, other.x + other.width));
+        DeltaY = self.y - max(other.y, min(self.y, other.y + other.height));
+        return (DeltaX * DeltaX + DeltaY * DeltaY) < (self.radius * self.radius);
 '''
         collision_radius_sum = self. + sprite2.collision_radius
 
@@ -39,8 +46,10 @@ def GenerateBlock():
     return [[randint(0,3) for x in range(0,8)] for y in range(17)]
 
 class Block(Model):
-    def __init__(self,world,x,y,hp,vx=0,vy=0,angle=0):
+    def __init__(self,world,x,y,hp,width=60,height=30,vx=0,vy=0,angle=0):
         super().__init__(world,x,y,vx,vy,angle,hp)
+        self.width = width
+        self.height = height
         self.image = ""
         if hp == 1 :
             self.image = "images/block1.png"
@@ -141,7 +150,7 @@ class World:
         
         if key == arcade.key.SPACE and self.ball.running == False:
             self.ball.shoot(self.arrow.angle)
-            print ( str(self.ball.vx) + " "+str(self.ball.vy) )
+            print ("SPACE "+"VX = "+ str(self.ball.vx) + " VY = "+str(self.ball.vy) )
             self.score += 1
         
         if key == arcade.key.LEFT:
@@ -154,7 +163,7 @@ class World:
             self.arrow.move = 0
         if not key == arcade.key.RIGHT:
             self.arrow.move = 0
-                    
+        
     def update(self,delta):
         arrowPlace = self.ball.update(delta)
         if arrowPlace != -1:
@@ -163,23 +172,75 @@ class World:
         hit=0
         changeX=0
         changeY=0
+        
         for block in self.blocks:
             block.update(delta)
             
-            hitSizeX = 30 + self.ball.radius
-            hitSizeY = 15 + self.ball.radius
             ###if ( math.atan2(self.ball.x-block.x , self.ball.y-block.y) >= math.atan2( 0 - 30 , 0-15) and math.atan2(self.ball.x-block.x , self.ball.y-block.y) <= math.atan2( 60 - 30 , 0-15) ) or( math.atan2(self.ball.x-block.x , self.ball.y-block.y) >= math.atan2(0-blockX , 30-blockY) and math.atan2(self.ball.x-block.x , self.ball.y-block.y)<= math.atan2(60-blockX , 30-blockY) ):
-            if self.ball.hit(block,hitSizeX,hitSizeY) :
-                if math.atan2(abs(block.y - self.ball.y) , abs(block.x - self.ball.x) ) >= 0.5:
-                    changeY += 1
+            #if self.ball.ballHitBlock(block) :
+            if self.ball.hit(block):
+                ''' 
+                    ต้องหาจุดของวงกลมที่เข้าใกล้ x y ของสี่เหลี่ยมที่มากที่สุด แล้วจะใช้เป็น x y ในการหา arctan
 
-                if math.atan2(abs(block.y - self.ball.y) , abs(block.x - self.ball.x) ) < 0.5 :
+                    ยังแก้ปัญหาถ้ายิงชึ้นตรงๆแล้วลูกควรลงไม่ได้ มัมนเปลี่ยนแกน X แต่ความจริงควรเปลี่ยนแกน Y
+                '''
+                '''
+                  M
+                |---|
+              N |   | L
+                |---|
+                  K
+                '''
+                min=10000
+                for i in range(0,90+1):
+                        x = math.cos(math.degrees(i)) * 15
+                        y = math.sin(math.degrees(90-i)) * 15
+                        r = ( (block.x - x)**2 + (block.y -y )**2 ) ** 0.5
+                        if r < min :
+                            r = min
+                            ansX = x
+                            ansY = y
+                for i in range(-90,0+1):
+                        x = math.cos(math.degrees(i)) * 15
+                        y = math.sin(math.degrees(90-i)) * 15
+                        r = ( (block.x - x)**2 + (block.y -y )**2 ) ** 0.5
+                        if r < min :
+                            r = min
+                            ansX = x
+                            ansY = y
+
+                tan = math.atan2(abs(block.y - ansY ) , abs(block.x - ansX) )
+                # N
+                if tan > -2.0344439357957027 and tan < -1.1071487177940904  :
+                    changeX += 1
+                    #self.ball.x = block.x - 30 
+                #L
+                elif tan > 1.1071487177940904 and tan < 2.0344439357957027 :
+                    changeX += 1
+                    #self.ball.x = block.x + 30 
+                #M
+                elif tan > -1.1071487177940904 and tan < 1.1071487177940904 :
+                    changeY += 1
+                    #self.ball.y = block.y - 15
+                #K
+                elif tan >-3.0750244898139694 and tan< -2.0344439357957027 : 
+                    changeY += 1
+                    #self.ball.y = block.y + 15
+                elif tan > 2.0481417091685685 and tan < 3.141592653589793 :
+                    changeY += 1
+                    #self.ball.y = block.y + 15
+                # EDGE 
+                elif abs(tan) == 2.0344439357957027 or abs(tan) == 1.1071487177940904:
+                    changeX += 1
+                    changeY += 1
+                '''
+                if tan < 0.5 :
                     changeX += 1
                     ###self.ball.x = min( block.y - self.ball.y)
-
+                '''
                 print ( "X "+"Ball: "+str(self.ball.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.ball.x) ) )
-                print("Y "+"Ball: "+str(self.ball.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.ball.y) ) )
-                print("Atan = " + str( math.atan2(abs(block.y - self.ball.y) , abs(block.x - self.ball.x) ) ))
+                print( "Y "+"Ball: "+str(self.ball.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.ball.y) ) )
+                print( "Atan = " + str( tan ) + " Block HP : "+str(block.hp) + " Score = " + str(self.score))
                 hit+=1
                 block.hp -= 1
                 if block.hp <=0:
@@ -199,7 +260,7 @@ class World:
                 
             if changeY >0:
                 self.ball.vy *= -1
-            print ( str(self.ball.vx) + " "+str(self.ball.vy) )
+            print ("VX = "+ str(self.ball.vx) + " VY = "+str(self.ball.vy) )
             print()
             '''
             self.ball.vx *=-1

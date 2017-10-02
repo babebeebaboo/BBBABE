@@ -51,16 +51,22 @@ class SpaceGameWindow(arcade.Window):
         self.ball_sprite = ModelSprite('images/ball.png',model=self.world.ball)
         self.arrow_sprite = ModelSprite('images/arrow1.png',model=self.world.arrow)
         self.block_sprite = []
+        self.oldscore = []
+        self.oldscore = self.world.blockshp
+        
         for block in self.world.blocks:
             self.block_sprite.append(ModelSprite(block.image,model=block))
             
     def on_draw(self):
         arcade.start_render()
-        
+        #if self.oldscore == self.world.blockshp:
         for block in self.block_sprite:
-            block.draw()
-            block = ModelSprite(block.image,model=block)
-            block.draw()
+                block.draw()
+                block = ModelSprite(block.image,model=block)
+                block.draw()
+
+        
+
 
         self.arrow_sprite.draw()
         self.ball_sprite.draw()
