@@ -124,7 +124,7 @@ class World:
         self.width = width
         self.height = height
         self.ball = Ball(self,300,20,0,0,20)
-        self.arrow = Arrow(self,300,20,0,0,179-5,1)
+        self.arrow = Arrow(self,300,20,0,0,179-5,0)
         self.blockshp = GenerateBlock()
         self.blocks = []
         self.breakBlock =0
@@ -138,20 +138,23 @@ class World:
         self.noOfBlock = len( self.blocks)
         
     def on_key_press(self, key, key_modifiers):
+        
         if key == arcade.key.SPACE and self.ball.running == False:
             self.ball.shoot(self.arrow.angle)
             print ( str(self.ball.vx) + " "+str(self.ball.vy) )
             self.score += 1
-        '''
-        while key == arcade.key.LEFT:
-            if on_key_release( arcade.key.LEFT ):
-                break
-            self.arrow.update(-1)
-        while key == arcade.key.RIGHT:
-            if on_key_release( arcade.key.LEFT ):
-                break
-            self.arrow.update(1)
-        '''            
+        
+        if key == arcade.key.LEFT:
+                self.arrow.move = 1
+        if key == arcade.key.RIGHT:
+                self.arrow.move = -1
+
+    def on_key_release(self, key, key_modifiers):
+        if not key == arcade.key.LEFT:
+                self.arrow.move = 0
+        if not key == arcade.key.RIGHT:
+                self.arrow.move = 0
+                    
     def update(self,delta):
         arrowPlace = self.ball.update(delta)
         if arrowPlace != -1:

@@ -76,6 +76,8 @@ class SpaceGameWindow(arcade.Window):
         self.world.update(delta)
     def on_key_press(self,key,key_modifiers):
         self.world.on_key_press(key,key_modifiers)
+    def on_key_release(self,key,key_modifiers):
+        self.world.on_key_release(key,key_modifiers)
 
 if __name__ == '__main__':
     windows = SpaceGameWindow(SCREEN_WIDTH,SCREEN_HEIGHT)
