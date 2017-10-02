@@ -90,7 +90,7 @@ class Ball(Model):
 
     def shoot(self,angle):
         self.running = True
-        maxspeed = 20
+        maxspeed = 20/5
         if angle == 180:
             angle -= 1
         if angle == 0:
@@ -179,10 +179,21 @@ class World:
             ###if ( math.atan2(self.ball.x-block.x , self.ball.y-block.y) >= math.atan2( 0 - 30 , 0-15) and math.atan2(self.ball.x-block.x , self.ball.y-block.y) <= math.atan2( 60 - 30 , 0-15) ) or( math.atan2(self.ball.x-block.x , self.ball.y-block.y) >= math.atan2(0-blockX , 30-blockY) and math.atan2(self.ball.x-block.x , self.ball.y-block.y)<= math.atan2(60-blockX , 30-blockY) ):
             #if self.ball.ballHitBlock(block) :
             if self.ball.hit(block):
+                '''
+                if abs(self.ball.vx) > abs(self.ball.vy):
+                    changeX += 1
+                elif abs(self.ball.vy) > abs(self.ball.vx) :
+                    changeY += 1 
+                else :
+                    changeX += 1
+                    changeY += 1 
+                '''
+
+                
                 ''' 
                     ต้องหาจุดของวงกลมที่เข้าใกล้ x y ของสี่เหลี่ยมที่มากที่สุด แล้วจะใช้เป็น x y ในการหา arctan
 
-                    ยังแก้ปัญหาถ้ายิงชึ้นตรงๆแล้วลูกควรลงไม่ได้ มัมนเปลี่ยนแกน X แต่ความจริงควรเปลี่ยนแกน Y
+                    ยังแก้ปัญหาถ้ายิงชึ้นตรงๆตรงระหว่างลูกแล้วลูกควรลงแต่ลงไม่ได้ มันเปลี่ยนด้าน L แต่ความจริงควรเปลี่ยนด้าน K
                 '''
                 '''
                   M
@@ -203,6 +214,22 @@ class World:
                 for i in range(-90,0+1):
                         x = math.cos(math.degrees(i)) * 15
                         y = math.sin(math.degrees(90-i)) * 15
+                        r = ( (block.x - x)**2 + (block.y -y )**2 ) ** 0.5
+                        if r < min :
+                            r = min
+                            ansX = x
+                            ansY = y
+                for i in range(0,90+1):
+                        x = math.cos(math.degrees(90-i)) * 15
+                        y = math.sin(math.degrees(i)) * 15
+                        r = ( (block.x - x)**2 + (block.y -y )**2 ) ** 0.5
+                        if r < min :
+                            r = min
+                            ansX = x
+                            ansY = y
+                for i in range(-90,0+1):
+                        x = math.cos(math.degrees(90-i)) * 15
+                        y = math.sin(math.degrees(i)) * 15
                         r = ( (block.x - x)**2 + (block.y -y )**2 ) ** 0.5
                         if r < min :
                             r = min
@@ -237,7 +264,9 @@ class World:
                 if tan < 0.5 :
                     changeX += 1
                     ###self.ball.x = min( block.y - self.ball.y)
+                
                 '''
+                
                 print ( "X "+"Ball: "+str(self.ball.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.ball.x) ) )
                 print( "Y "+"Ball: "+str(self.ball.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.ball.y) ) )
                 print( "Atan = " + str( tan ) + " Block HP : "+str(block.hp) + " Score = " + str(self.score))
