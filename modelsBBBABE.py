@@ -3,15 +3,74 @@ import arcade
 from random import randint
 import math
 
+delta = 5
+
 class Model:
     def __init__(self,world,x,y,vx,vy,angle=0,hp=0):
         self.x = x
         self.y = y
+        #self.center_x = x
+        #self.center_y = y
         self.vx = vx
         self.vy = vy
         self.world = world
         self.angle = angle
         self.hp = hp
+
+    def collision(self,other):
+        '''
+        down = arcade.Sprite('images/blockdown.png')
+        up = arcade.Sprite('images/blockup.png')
+        left = arcade.Sprite('images/blockleft.png')
+        right = arcade.Sprite('images/blockright.png')
+
+        ball = arcade.Sprite('images/ball.png')
+        '''
+        '''
+        print("Down ",end='')
+        print(down.points)
+        '''
+        '''
+        print("Up ",end='')
+        print(up.points)
+        print("Left ",end='')
+        print(left.points)
+        print("Right ",end='')
+        print(right.points)
+        '''
+        '''
+        down.center_x = other.x
+        down.center_y = other.y - 15/2
+        '''
+        down1 = ( (other.x - 30, other.y - 15),(other.x + 30, other.y - 15) , (other.x + 30, other.y-14), (other.x - 30, other.y-14))
+        up1 = ( (other.x - 30, other.y + 15),(other.x + 30, other.y + 15) , (other.x + 30, other.y+16), (other.x - 30, other.y+16))
+        left1 = ( (other.x - 30, other.y - 15),(other.x - 29, other.y -15) , (other.x - 29, other.y+15), (other.x - 30, other.y+15))
+        right1 = ( (other.x + 29, other.y -15),(other.x + 30, other.y - 15), (other.x + 30, other.y+15), (other.x + 29, other.y+15))
+        ball = ( (self.x - 10,self.y-10) , (self.x + 10,self.y- 10) , (self.x + 10,self.y+ 10) , (self.x - 10,self.y + 10))
+        '''
+        print("Down1 ",end='')
+        print(down.points)
+        up.center_x = other.x
+        up.center_y = other.y + 15/2
+
+        left.center_x = other.x - 15
+        left.center_y = other.y 
+
+        right.center_x = other.x + 15
+        right.center_y = other.y
+
+        ball.center_x = self.x
+        ball.center_y = self.y
+        '''
+        s = ""
+        if arcade.are_polygons_intersecting(ball,down1) or arcade.are_polygons_intersecting(ball,up1):
+            s += "y"
+        if arcade.are_polygons_intersecting(ball,left1) or arcade.are_polygons_intersecting(ball,right1):
+            s += "x"
+        return s
+
+
+
     def hit(self,other):
         hit_sizeX = 30 + self.radius
         hit_sizeY = 15 + self.radius
@@ -90,7 +149,7 @@ class Ball(Model):
 
     def shoot(self,angle):
         self.running = True
-        maxspeed = 20/5
+        maxspeed = 20
         if angle == 180:
             angle -= 1
         if angle == 0:
@@ -165,6 +224,10 @@ class World:
             self.arrow.move = 0
         
     def update(self,delta):
+        '''
+        print("Delta = ",end='')
+        print(delta)
+        '''
         arrowPlace = self.ball.update(delta)
         if arrowPlace != -1:
             self.arrow.x = arrowPlace
@@ -172,13 +235,26 @@ class World:
         hit=0
         changeX=0
         changeY=0
+        collision = 0
         
         for block in self.blocks:
             block.update(delta)
             
             ###if ( math.atan2(self.ball.x-block.x , self.ball.y-block.y) >= math.atan2( 0 - 30 , 0-15) and math.atan2(self.ball.x-block.x , self.ball.y-block.y) <= math.atan2( 60 - 30 , 0-15) ) or( math.atan2(self.ball.x-block.x , self.ball.y-block.y) >= math.atan2(0-blockX , 30-blockY) and math.atan2(self.ball.x-block.x , self.ball.y-block.y)<= math.atan2(60-blockX , 30-blockY) ):
             #if self.ball.ballHitBlock(block) :
-            if self.ball.hit(block):
+
+            collision = self.ball.collision(block)
+            if collision :
+                if collision == "y":
+                    changeY += 1
+                if collision == "x":
+                    changeX += 1
+                if len(collision) > 1:
+                    if abs(self.ball.vx) > abs(self.ball.vy):
+                        changeX += 1
+                    if abs(self.ball.vy) > abs(self.ball.vx):
+                        changeY += 1
+                        
                 '''
                 if abs(self.ball.vx) > abs(self.ball.vy):
                     changeX += 1
@@ -201,6 +277,9 @@ class World:
               N |   | L
                 |---|
                   K
+                '''
+
+
                 '''
                 min=10000
                 for i in range(0,90+1):
@@ -261,6 +340,9 @@ class World:
                     changeX += 1
                     changeY += 1
                 '''
+
+
+                '''
                 if tan < 0.5 :
                     changeX += 1
                     ###self.ball.x = min( block.y - self.ball.y)
@@ -269,7 +351,7 @@ class World:
                 
                 print ( "X "+"Ball: "+str(self.ball.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.ball.x) ) )
                 print( "Y "+"Ball: "+str(self.ball.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.ball.y) ) )
-                print( "Atan = " + str( tan ) + " Block HP : "+str(block.hp) + " Score = " + str(self.score))
+                print(collision +  " Block HP : "+str(block.hp) + " Score = " + str(self.score))
                 hit+=1
                 block.hp -= 1
                 if block.hp <=0:

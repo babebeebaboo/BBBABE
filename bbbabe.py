@@ -85,6 +85,9 @@ class SpaceGameWindow(arcade.Window):
     def on_key_release(self,key,key_modifiers):
         self.world.on_key_release(key,key_modifiers)
 
+    def check_for_collision(self,other):
+        self.world.ball.check_for_collision(other)
+
 if __name__ == '__main__':
     windows = SpaceGameWindow(SCREEN_WIDTH,SCREEN_HEIGHT)
     arcade.run()
