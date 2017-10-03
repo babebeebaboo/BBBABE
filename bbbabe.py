@@ -21,6 +21,18 @@ class ModelSprite(arcade.Sprite):
             self.image = "images/block2.png"
         if self.hp == 3 :
             self.image = "images/block3.png"
+        if self.hp == 4 :
+            self.image = "images/block4.png"
+        if self.hp == 5 :
+            self.image = "images/block5.png"
+        if self.hp == 6 :
+            self.image = "images/block6.png"
+        if self.hp == 7 :
+            self.image = "images/block7.png"
+        if self.hp == 8 :
+            self.image = "images/block8.png"
+        if self.hp == 9 :
+            self.image = "images/block+.png"
  
     def sync_with_model(self):
         if self.model:
@@ -38,6 +50,18 @@ class ModelSprite(arcade.Sprite):
                 self.image = "images/block2.png"
             if self.hp == 3 :
                 self.image = "images/block3.png"
+            if self.hp == 4 :
+                self.image = "images/block4.png"
+            if self.hp == 5 :
+                self.image = "images/block5.png"
+            if self.hp == 6 :
+                self.image = "images/block6.png"
+            if self.hp == 7 :
+                self.image = "images/block7.png"
+            if self.hp == 8 :
+                self.image = "images/block8.png"
+            if self.hp == 9 :
+                self.image = "images/block+.png"
 
     def draw(self):
         self.sync_with_model()

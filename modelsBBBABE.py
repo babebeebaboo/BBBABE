@@ -3,7 +3,6 @@ import arcade
 from random import randint
 import math
 
-delta = 5
 
 class Model:
     def __init__(self,world,x,y,vx,vy,angle=0,hp=0):
@@ -102,7 +101,7 @@ class Model:
 '''
 
 def GenerateBlock():
-    return [[randint(0,3) for x in range(0,8)] for y in range(17)]
+    return [[randint(0,9) for x in range(0,8)] for y in range(17)]
 
 class Block(Model):
     def __init__(self,world,x,y,hp,width=60,height=30,vx=0,vy=0,angle=0):
@@ -126,6 +125,10 @@ class Block(Model):
             self.image = "images/block7.png"
         if hp == 8 :
             self.image = "images/block8.png"
+            
+        if hp == 9 :
+            self.image = "images/block+.png"
+            
     def update(self,delta):
         pass
 
