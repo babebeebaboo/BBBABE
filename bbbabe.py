@@ -5,6 +5,31 @@ SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 
 class ModelSprite(arcade.Sprite):
+    def changeImageByHp(self):
+        image = ""
+        if self.hp == 0 :
+            image = "images/blockwhite.png"
+        if self.hp == 1 :
+            image = "images/block1.png"
+        if self.hp == 2 :
+            image = "images/block2.png"
+        if self.hp == 3 :
+            image = "images/block3.png"
+        if self.hp == 4 :
+            image = "images/block4.png"
+        if self.hp == 5 :
+            image = "images/block5.png"
+        if self.hp == 6 :
+            image = "images/block6.png"
+        if self.hp == 7 :
+            image = "images/block7.png"
+        if self.hp == 8 :
+            image = "images/block8.png"
+        if self.hp == 9 :
+            image = "images/block+.png"
+
+        return image
+
     def __init__(self, *args, **kwargs):
         self.model = kwargs.pop('model', None)
  
@@ -12,28 +37,8 @@ class ModelSprite(arcade.Sprite):
         self.x = self.model.x
         self.y = self.model.y
         self.hp = self.model.hp
-        self.image = ""
-        if self.hp == 0 :
-            self.image = "images/blockwhite.png"
-        if self.hp == 1 :
-            self.image = "images/block1.png"
-        if self.hp == 2 :
-            self.image = "images/block2.png"
-        if self.hp == 3 :
-            self.image = "images/block3.png"
-        if self.hp == 4 :
-            self.image = "images/block4.png"
-        if self.hp == 5 :
-            self.image = "images/block5.png"
-        if self.hp == 6 :
-            self.image = "images/block6.png"
-        if self.hp == 7 :
-            self.image = "images/block7.png"
-        if self.hp == 8 :
-            self.image = "images/block8.png"
-        if self.hp == 9 :
-            self.image = "images/block+.png"
- 
+        self.image = self.changeImageByHp()
+        
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
@@ -41,27 +46,7 @@ class ModelSprite(arcade.Sprite):
             self.angle = self.model.angle
 
             self.hp = self.model.hp
-            self.image = ""
-            if self.hp == 0 :
-                self.image = "images/blockwhite.png"
-            if self.hp == 1 :
-                self.image = "images/block1.png"
-            if self.hp == 2 :
-                self.image = "images/block2.png"
-            if self.hp == 3 :
-                self.image = "images/block3.png"
-            if self.hp == 4 :
-                self.image = "images/block4.png"
-            if self.hp == 5 :
-                self.image = "images/block5.png"
-            if self.hp == 6 :
-                self.image = "images/block6.png"
-            if self.hp == 7 :
-                self.image = "images/block7.png"
-            if self.hp == 8 :
-                self.image = "images/block8.png"
-            if self.hp == 9 :
-                self.image = "images/block+.png"
+            self.image = self.changeImageByHp()
 
     def draw(self):
         self.sync_with_model()
@@ -89,12 +74,9 @@ class SpaceGameWindow(arcade.Window):
                 block = ModelSprite(block.image,model=block)
                 block.draw()
 
-        
-
-
         self.arrow_sprite.draw()
         self.ball_sprite.draw()
-        arcade.draw_text(str(self.world.noOfBlock - self.world.breakBlock),
+        arcade.draw_text(str(self.world.blockleft),
                          self.width - 60, self.height - 60,
                          arcade.color.BLUE, 20)
         
