@@ -124,12 +124,18 @@ class Ball(Model):
                         changeY += 1
                 print ( "X "+"Ball: "+str(self.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.x) ) )
                 print( "Y "+"Ball: "+str(self.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.y) ) )
+                
                 hit+=1
                 block.hp -= 1
-                if block.hp <=0:
-                    block.y=-100
-                    block.x=-100
-                    breakblock+=1
+
+                if block.hp >= 8 :
+                    block.hp = 0
+
+                if block.hp <= 0 :
+                    block.y = -100
+                    block.x = -100
+                    breakblock += 1
+
         if hit>0:
             if changeX >0:
                 self.vx *= -1
@@ -167,23 +173,27 @@ class Ball(Model):
 
 class World:
     def __init__(self,width,height):
+        ''' Place everything on world except blocks '''
         self.width = width
         self.height = height
         self.ball = Ball(self,300,20,20)
         self.arrow = Arrow(self,300,20,174)
+        ''' END Place everything on world except blocks '''
+        ''' Generate Blocks '''
         self.blockshp = GenerateBlock()
         self.blocks = []
-        self.breakBlock =0
-        self.score = 0
-
         for j in range(0,8):
             for i in range(0,16):
                 if self.blockshp[i][j] > 0 :
                     block = Block(self,j*60+90,i*30+285,self.blockshp[i][j])
                     self.blocks.append(block)
-
+        ''' END Generate Blocks '''
+        ''' All about Score '''
+        self.breakBlock =0
+        self.score = 0
         self.noOfBlock = len( self.blocks)
         self.blockleft = self.noOfBlock - self.breakBlock
+        ''' END All about Score '''
         
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.SPACE and self.ball.running == False:
@@ -201,13 +211,16 @@ class World:
         
         
     def update(self,delta):
-        
+        ''' Arrow '''
         arrowPlace = self.ball.update(delta)
         if arrowPlace != -1:
             self.arrow.x = arrowPlace
         self.arrow.update(delta)
-
+        '''END Arrow '''
+        '''Block'''
         breakblock = self.ball.check_collision_list(self.blocks)
         if breakblock:
             self.breakBlock += breakblock
         self.blockleft = self.noOfBlock - self.breakBlock
+        '''END Block'''
+        
