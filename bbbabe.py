@@ -75,6 +75,7 @@ class SpaceGameWindow(arcade.Window):
 
         self.arrow_sprite.draw()
         self.ball_sprite.draw()
+        '''color: http://www.colorpicker.com/color-chart/'''
         arcade.draw_text("LEFT: "+str(self.world.blockleft),
                          self.width - 240, self.height - 30,
                          arcade.color.BITTERSWEET, 20)
