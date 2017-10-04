@@ -223,4 +223,3 @@ class World:
             self.breakBlock += breakblock
         self.blockleft = self.noOfBlock - self.breakBlock
         '''END Block'''
-        

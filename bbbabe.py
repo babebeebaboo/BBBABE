@@ -77,11 +77,11 @@ class SpaceGameWindow(arcade.Window):
         self.ball_sprite.draw()
         arcade.draw_text("LEFT: "+str(self.world.blockleft),
                          self.width - 240, self.height - 30,
-                         arcade.color.BLUE, 20)
+                         arcade.color.BITTERSWEET, 20)
         
         arcade.draw_text("SCORE: "+str(self.world.score),
                          self.width - 120, self.height - 30,
-                         arcade.color.BLUE, 20)
+                         arcade.color.AZURE, 20)
 
     def update(self,delta):
         self.world.update(delta)
@@ -89,7 +89,6 @@ class SpaceGameWindow(arcade.Window):
         self.world.on_key_press(key,key_modifiers)
     def on_key_release(self,key,key_modifiers):
         self.world.on_key_release(key,key_modifiers)
-
     def check_for_collision(self,other):
         self.world.ball.check_for_collision(other)
 
