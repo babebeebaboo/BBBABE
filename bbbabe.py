@@ -68,7 +68,6 @@ class SpaceGameWindow(arcade.Window):
             
     def on_draw(self):
         arcade.start_render()
-        #if self.oldscore == self.world.blockshp:
         for block in self.block_sprite:
                 block.draw()
                 block = ModelSprite(block.image,model=block)
@@ -76,12 +75,12 @@ class SpaceGameWindow(arcade.Window):
 
         self.arrow_sprite.draw()
         self.ball_sprite.draw()
-        arcade.draw_text(str(self.world.blockleft),
-                         self.width - 60, self.height - 60,
+        arcade.draw_text("LEFT: "+str(self.world.blockleft),
+                         self.width - 240, self.height - 30,
                          arcade.color.BLUE, 20)
         
-        arcade.draw_text(str(self.world.score),
-                         self.width - 60, self.height - 30,
+        arcade.draw_text("SCORE: "+str(self.world.score),
+                         self.width - 120, self.height - 30,
                          arcade.color.BLUE, 20)
 
     def update(self,delta):
