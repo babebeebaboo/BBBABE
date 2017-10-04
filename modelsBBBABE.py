@@ -41,8 +41,8 @@ class Model:
         down.center_x = other.x
         down.center_y = other.y - 15/2
         '''
-        down1 = ( (other.x - 30, other.y - 15),(other.x + 30, other.y - 15) , (other.x + 30, other.y-14), (other.x - 30, other.y-14))
-        up1 = ( (other.x - 30, other.y + 15),(other.x + 30, other.y + 15) , (other.x + 30, other.y+16), (other.x - 30, other.y+16))
+        down1 = ( (other.x - 29, other.y - 15),(other.x + 29, other.y - 15) , (other.x + 29, other.y-14), (other.x - 29, other.y-14))
+        up1 = ( (other.x - 29, other.y + 15),(other.x + 29, other.y + 15) , (other.x + 29, other.y+16), (other.x - 29, other.y+16))
         left1 = ( (other.x - 30, other.y - 15),(other.x - 29, other.y -15) , (other.x - 29, other.y+15), (other.x - 30, other.y+15))
         right1 = ( (other.x + 29, other.y -15),(other.x + 30, other.y - 15), (other.x + 30, other.y+15), (other.x + 29, other.y+15))
         ball = ( (self.x - 10,self.y-10) , (self.x + 10,self.y- 10) , (self.x + 10,self.y+ 10) , (self.x - 10,self.y + 10))
@@ -140,7 +140,7 @@ class Arrow(Model):
         
         self.angle += self.move 
         if self.angle <= 0+5 or self.angle >= 180-5: 
-            self.move *= -1
+            self.move *= 0
        # print(self.angle)
 
 class Ball(Model):
