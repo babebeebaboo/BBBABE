@@ -107,8 +107,8 @@ class Ball(Model):
                         changeX += 1
                     if abs(self.vy) > abs(self.vx):
                         changeY += 1
-                print ( "X "+"Ball: "+str(self.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.x) ) )
-                print( "Y "+"Ball: "+str(self.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.y) ) )
+                #print ( "X "+"Ball: "+str(self.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.x) ) )
+                #print( "Y "+"Ball: "+str(self.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.y) ) )
                 
                 hit+=1
                 block.hp -= 1
@@ -127,7 +127,7 @@ class Ball(Model):
             if changeY >0:
                 self.vy *= -1
 
-            print ("VX = "+ str(self.vx) + " VY = "+str(self.vy) +"\n")
+            #print ("VX = "+ str(self.vx) + " VY = "+str(self.vy) +"\n")
         return breakblock
 
     def collision(self,other):
@@ -182,7 +182,7 @@ class World:
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.SPACE and self.ball.running == False:
             self.ball.shoot(self.arrow.angle)
-            print ("SPACE "+"VX = "+ str(self.ball.vx) + " VY = "+str(self.ball.vy) )
+            #print ("SPACE "+"VX = "+ str(self.ball.vx) + " VY = "+str(self.ball.vy) )
             self.score += 1
         if key == arcade.key.LEFT:
             self.arrow.move = 1
