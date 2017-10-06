@@ -6,28 +6,14 @@ SCREEN_HEIGHT = 800
 
 class ModelSprite(arcade.Sprite):
     def changeImageByHp(self):
-        image = ""
+        image = "images/block"
         if self.hp == 0 :
-            image = "images/blockwhite.png"
-        if self.hp == 1 :
-            image = "images/block1.png"
-        if self.hp == 2 :
-            image = "images/block2.png"
-        if self.hp == 3 :
-            image = "images/block3.png"
-        if self.hp == 4 :
-            image = "images/block4.png"
-        if self.hp == 5 :
-            image = "images/block5.png"
-        if self.hp == 6 :
-            image = "images/block6.png"
-        if self.hp == 7 :
-            image = "images/block7.png"
-        if self.hp == 8 :
-            image = "images/block8.png"
-        if self.hp == 9 :
-            image = "images/block+.png"
-
+            image += "white"
+        elif self.hp == 9 :
+            image += "+"
+        else :
+            image += str(self.hp)
+        image += ".png"        
         return image
 
     def __init__(self, *args, **kwargs):
@@ -42,9 +28,7 @@ class ModelSprite(arcade.Sprite):
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
-            
             self.angle = self.model.angle
-
             self.hp = self.model.hp
             self.image = self.changeImageByHp()
 
@@ -60,9 +44,6 @@ class SpaceGameWindow(arcade.Window):
         self.ball_sprite = ModelSprite('images/ball.png',model=self.world.ball)
         self.arrow_sprite = ModelSprite('images/arrow1.png',model=self.world.arrow)
         self.block_sprite = []
-        self.oldscore = []
-        self.oldscore = self.world.blockshp
-        
         for block in self.world.blocks:
             self.block_sprite.append(ModelSprite(block.image,model=block))
             
@@ -72,7 +53,6 @@ class SpaceGameWindow(arcade.Window):
                 block.draw()
                 block = ModelSprite(block.image,model=block)
                 block.draw()
-
         self.arrow_sprite.draw()
         self.ball_sprite.draw()
         '''color: http://www.colorpicker.com/color-chart/'''
@@ -92,6 +72,7 @@ class SpaceGameWindow(arcade.Window):
         self.world.on_key_release(key,key_modifiers)
     def check_for_collision(self,other):
         self.world.ball.check_for_collision(other)
+    
 
 if __name__ == '__main__':
     windows = SpaceGameWindow(SCREEN_WIDTH,SCREEN_HEIGHT)
