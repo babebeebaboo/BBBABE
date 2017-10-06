@@ -139,17 +139,17 @@ class Ball(Model):
         
         s = ""
         if arcade.are_polygons_intersecting(ball,down1) :
-            self.y = other.y - (15 + self.radius)
+            self.y = other.y - (15 + self.radius + 1)
             s += "y"
         if arcade.are_polygons_intersecting(ball,up1) :
-            self.y = other.y + (15 + self.radius)
+            self.y = other.y + (15 + self.radius + 1)
             if s == "":
                 s += "y"
         if arcade.are_polygons_intersecting(ball,left1) :
-            self.x = other.x - (30 + self.radius)
+            self.x = other.x - (30 + self.radius + 1)
             s += "x"
         if arcade.are_polygons_intersecting(ball,right1):
-            self.x = other.x + (30 + self.radius)
+            self.x = other.x + (30 + self.radius + 1)
             if len(s) == 1:
                 s += "x"
 
