@@ -19,28 +19,14 @@ def GenerateBlock():
 class Block(Model):
 
     def changeImageByHp(self):
-        image = ""
+        image = "images/block"
         if self.hp == 0 :
-            image = "images/blockwhite.png"
-        if self.hp == 1 :
-            image = "images/block1.png"
-        if self.hp == 2 :
-            image = "images/block2.png"
-        if self.hp == 3 :
-            image = "images/block3.png"
-        if self.hp == 4 :
-            image = "images/block4.png"
-        if self.hp == 5 :
-            image = "images/block5.png"
-        if self.hp == 6 :
-            image = "images/block6.png"
-        if self.hp == 7 :
-            image = "images/block7.png"
-        if self.hp == 8 :
-            image = "images/block8.png"
-        if self.hp == 9 :
-            image = "images/block+.png"
-
+            image += "white"
+        elif self.hp == 9 :
+            image += "+"
+        else :
+            image += str(self.hp)
+        image += ".png"        
         return image
 
     def __init__(self,world,x,y,hp,width=60,height=30,vx=0,vy=0,angle=0):
@@ -54,7 +40,6 @@ class Arrow(Model):
         super().__init__(world,x,y,vx,vy,angle)
         self.move = move
     def update(self,delta):
-        
         self.angle += self.move 
         if self.angle <= 0+5 or self.angle >= 180-5: 
             self.move *= 0
@@ -80,7 +65,6 @@ class Ball(Model):
             self.vy = (180 - angle) / 90 * maxspeed
 
     def update(self,delta):
-        
         if self.x < self.radius or self.x > self.world.width-self.radius:
             self.vx = - self.vx
         
@@ -105,6 +89,7 @@ class Ball(Model):
             return self.x
         else :
             return -1
+
     def check_collision_list(self,list):
         hit=0
         changeX=0
@@ -146,7 +131,6 @@ class Ball(Model):
         return breakblock
 
     def collision(self,other):
-        
         down1 = ( (other.x - 29, other.y - 15),(other.x + 29, other.y - 15) , (other.x + 29, other.y-14), (other.x - 29, other.y-14))
         up1 = ( (other.x - 29, other.y + 15),(other.x + 29, other.y + 15) , (other.x + 29, other.y+16), (other.x - 29, other.y+16))
         left1 = ( (other.x - 30, other.y - 15),(other.x - 29, other.y -15) , (other.x - 29, other.y+15), (other.x - 30, other.y+15))
@@ -208,7 +192,6 @@ class World:
     def on_key_release(self, key, key_modifiers):
         if not key == arcade.key.LEFT or not key == arcade.key.RIGHT:
             self.arrow.move = 0
-        
         
     def update(self,delta):
         ''' Arrow '''
