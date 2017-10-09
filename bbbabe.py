@@ -7,7 +7,7 @@ SCREEN_HEIGHT = 800
 class ModelSprite(arcade.Sprite):
     def changeImageByHp(self):
         image = "images/block"
-        if self.hp == 0 :
+        if self.hp <= 0 :
             image += "white"
         elif self.hp == 9 :
             image += "+"
