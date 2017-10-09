@@ -90,7 +90,7 @@ class Ball(Model):
         else :
             return -1
 
-    def check_collision_list(self,list):
+    def check_collision_list(self,world,list):
         hit=0
         changeX=0
         changeY=0
@@ -107,14 +107,16 @@ class Ball(Model):
                         changeX += 1
                     if abs(self.vy) > abs(self.vx):
                         changeY += 1
-                print ( "X "+"Ball: "+str(self.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.x) ) )
-                print( "Y "+"Ball: "+str(self.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.y) ) )
+                #print ( "X "+"Ball: "+str(self.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.x) ) )
+                #print( "Y "+"Ball: "+str(self.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.y) ) )
                 
                 hit+=1
                 block.hp -= 1
 
                 if block.hp >= 8 :
                     block.hp = 0
+                    #world.noOfBall += 1
+
 
                 if block.hp <= 0 :
                     block.y = -100
@@ -127,7 +129,7 @@ class Ball(Model):
             if changeY >0:
                 self.vy *= -1
 
-            print ("VX = "+ str(self.vx) + " VY = "+str(self.vy) +"\n")
+            #print ("VX = "+ str(self.vx) + " VY = "+str(self.vy) +"\n")
         return breakblock
 
     def collision(self,other):
@@ -177,12 +179,13 @@ class World:
         self.score = 0
         self.noOfBlock = len( self.blocks)
         self.blockleft = self.noOfBlock - self.breakBlock
+        #self.noOfBall = 1
         ''' END All about Score '''
         
     def on_key_press(self, key, key_modifiers):
         if key == arcade.key.SPACE and self.ball.running == False:
             self.ball.shoot(self.arrow.angle)
-            print ("SPACE "+"VX = "+ str(self.ball.vx) + " VY = "+str(self.ball.vy) )
+            #print ("SPACE "+"VX = "+ str(self.ball.vx) + " VY = "+str(self.ball.vy) )
             self.score += 1
         if key == arcade.key.LEFT:
             self.arrow.move = 1
@@ -201,7 +204,7 @@ class World:
         self.arrow.update(delta)
         '''END Arrow '''
         '''Block'''
-        breakblock = self.ball.check_collision_list(self.blocks)
+        breakblock = self.ball.check_collision_list(self,self.blocks)
         if breakblock:
             self.breakBlock += breakblock
         self.blockleft = self.noOfBlock - self.breakBlock
