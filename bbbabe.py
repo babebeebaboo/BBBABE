@@ -13,7 +13,7 @@ class ModelSprite(arcade.Sprite):
             image += "+"
         else :
             image += str(self.hp)
-        image += ".png"        
+        image += ".png"  
         return image
 
     def __init__(self, *args, **kwargs):
@@ -23,20 +23,22 @@ class ModelSprite(arcade.Sprite):
         self.x = self.model.x
         self.y = self.model.y
         self.hp = self.model.hp
-        self.image = self.changeImageByHp()
+        self.image =  self.changeImageByHp() 
         
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
             self.angle = self.model.angle
             self.hp = self.model.hp
-            self.image = self.changeImageByHp()
+            #self.image = self.changeImageByHp()
+            self.image =self.changeImageByHp() 
 
     def draw(self):
         self.sync_with_model()
         super().draw()
 
 class SpaceGameWindow(arcade.Window):
+    
     def __init__(self,width,height):
         super().__init__(width,height)
         arcade.set_background_color(arcade.color.WHITE)
@@ -59,6 +61,7 @@ class SpaceGameWindow(arcade.Window):
                 block.draw()
                 block = ModelSprite(block.image,model=block)
                 block.draw()
+            
         self.arrow_sprite.draw()
 
         for ball in self.ball_sprite:
