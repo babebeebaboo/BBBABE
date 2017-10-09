@@ -62,6 +62,7 @@ class SpaceGameWindow(arcade.Window):
         self.arrow_sprite.draw()
 
         for ball in self.ball_sprite:
+            #print(len(self.ball_sprite))
             ball.draw()
 
         '''color: http://www.colorpicker.com/color-chart/'''

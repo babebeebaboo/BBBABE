@@ -52,7 +52,6 @@ class Ball(Model):
         self.running = running
 
     def shoot(self,angle):
-        print ("AA")
         self.running = True
         maxspeed = 20
         if angle == 180:
@@ -118,7 +117,7 @@ class Ball(Model):
                     block.hp = 0
                     world.noOfBall += 1
                     
-                    ball = Ball(world,300, 20 - 20*(world.noOfBall-1) ,20)
+                    ball = Ball(world,30, 20 - 20*(world.noOfBall-1) ,20)
                     world.balls.append(ball)
                     world.window.insert_ball(ball)
 
@@ -197,7 +196,7 @@ class World:
         
         if key == arcade.key.SPACE:
             for ball in self.balls:
-                if ball.running == False:
+                if not ball.running:
                     ball.shoot(self.arrow.angle)
                     #print ("SPACE "+"VX = "+ str(self.ball.vx) + " VY = "+str(self.ball.vy) )
                     self.score += 1
