@@ -49,6 +49,7 @@ class SpaceGameWindow(arcade.Window):
         self.ball_sprite.append(ModelSprite('images/ball.png',model=self.world.balls[0]))
 
         self.arrow_sprite = ModelSprite('images/arrow1.png',model=self.world.arrow)
+        
         self.block_sprite = []
         for block in self.world.blocks:
             self.block_sprite.append(ModelSprite(block.image,model=block))
