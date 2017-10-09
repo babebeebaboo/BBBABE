@@ -119,8 +119,10 @@ class Ball(Model):
 
 
                 if block.hp <= 0 :
+                    '''
                     block.y = -100
                     block.x = -100
+                    '''
                     breakblock += 1
 
         if hit>0:
