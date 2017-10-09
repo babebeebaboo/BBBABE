@@ -63,6 +63,12 @@ class SpaceGameWindow(arcade.Window):
         arcade.draw_text("SCORE: "+str(self.world.score),
                          self.width - 120, self.height - 30,
                          arcade.color.AZURE, 20)
+        '''
+        arcade.draw_text("Ball: "+str(self.world.score),
+                         0, self.height - 30,
+                         arcade.color.AZURE, 20)
+        '''
+
 
     def update(self,delta):
         self.world.update(delta)

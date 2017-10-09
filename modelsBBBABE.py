@@ -90,7 +90,7 @@ class Ball(Model):
         else :
             return -1
 
-    def check_collision_list(self,list):
+    def check_collision_list(self,world,list):
         hit=0
         changeX=0
         changeY=0
@@ -115,6 +115,8 @@ class Ball(Model):
 
                 if block.hp >= 8 :
                     block.hp = 0
+                    #world.noOfBall += 1
+
 
                 if block.hp <= 0 :
                     block.y = -100
@@ -177,6 +179,7 @@ class World:
         self.score = 0
         self.noOfBlock = len( self.blocks)
         self.blockleft = self.noOfBlock - self.breakBlock
+        #self.noOfBall = 1
         ''' END All about Score '''
         
     def on_key_press(self, key, key_modifiers):
@@ -201,7 +204,7 @@ class World:
         self.arrow.update(delta)
         '''END Arrow '''
         '''Block'''
-        breakblock = self.ball.check_collision_list(self.blocks)
+        breakblock = self.ball.check_collision_list(self,self.blocks)
         if breakblock:
             self.breakBlock += breakblock
         self.blockleft = self.noOfBlock - self.breakBlock
