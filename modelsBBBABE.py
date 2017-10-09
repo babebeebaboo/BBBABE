@@ -15,13 +15,21 @@ class Model:
         self.hp = hp
 
 def GenerateBlock():
-    return [[randint(0,9) for x in range(0,BLOCK_X)] for y in range(100)]
+    a = [[randint(0,8) for x in range(0,8)] for y in range(17)]
+    a[randint(0,17)][randint(0,8)] = 9
+    a[randint(0,17)][randint(0,8)] = 9
+    a[randint(0,17)][randint(0,8)] = 9
+    a[randint(0,17)][randint(0,8)] = 9
+    a[randint(0,17)][randint(0,8)] = 9
+    return a
+    #return [[9 for x in range(0,8)] for y in range(17)]
+
 
 class Block(Model):
 
     def changeImageByHp(self):
         image = "images/block"
-        if self.hp == 0 :
+        if self.hp <= 0 :
             image += "white"
         elif self.hp == 9 :
             image += "+"
@@ -56,6 +64,7 @@ class Ball(Model):
         self.size = size
         self.radius = size/2
         self.running = running
+        self.DefaultY = y
 
     def shoot(self,angle):
         self.running = True
@@ -70,7 +79,11 @@ class Ball(Model):
         else :
             self.vy = (180 - angle) / 90 * maxspeed
 
-    def update(self,delta):
+    def update(self,world,delta):
+        if self.y <= 20 and self.vy > 0:
+            self.y += self.vy
+            return -1
+
         if self.x < self.radius or self.x > self.world.width-self.radius:
             self.vx = - self.vx
         
@@ -80,23 +93,28 @@ class Ball(Model):
         self.x += self.vx
         self.y += self.vy
 
-        if self.y < 20 :
-            if self.x < self.radius:
-                self.x = self.radius
-            if self.x > 600 - self.radius:
-                self.x = 600 - self.radius
+        if self.y < 20 and self.vy < 0:
+            if world.ballX == -1:
+                if self.x < self.radius:
+                    self.x = self.radius
+                if self.x > 600 - self.radius:
+                    self.x = 600 - self.radius
+            else:
+                self.x = world.ballX
             
-            self.y = 20
+            self.y = self.DefaultY
             self.vx = 0
             self.vy = 0
             self.running = False
             
         if not self.running :
+            if world.ballX == -1:
+                world.ballX = self.x
             return self.x
         else :
             return -1
 
-    def check_collision_list(self,list):
+    def check_collision_list(self,world,list):
         hit=0
         changeX=0
         changeY=0
@@ -113,14 +131,19 @@ class Ball(Model):
                         changeX += 1
                     if abs(self.vy) > abs(self.vx):
                         changeY += 1
-                print ( "X "+"Ball: "+str(self.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.x) ) )
-                print( "Y "+"Ball: "+str(self.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.y) ) )
+                #print ( "X "+"Ball: "+str(self.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.x) ) )
+                #print( "Y "+"Ball: "+str(self.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.y) ) )
                 
                 hit+=1
                 block.hp -= 1
 
                 if block.hp >= 8 :
                     block.hp = 0
+                    world.noOfBall += 1
+                    
+                    ball = Ball(world,30, 19 - 50*(world.noOfBall-1) ,20)
+                    world.balls.append(ball)
+                    world.window.insert_ball(ball)
 
                 if block.hp <= 0 :
                     block.y = -100
@@ -133,7 +156,7 @@ class Ball(Model):
             if changeY >0:
                 self.vy *= -1
 
-            print ("VX = "+ str(self.vx) + " VY = "+str(self.vy) +"\n")
+            #print ("VX = "+ str(self.vx) + " VY = "+str(self.vy) +"\n")
         return breakblock
 
     def collision(self,other):
@@ -145,29 +168,37 @@ class Ball(Model):
         
         s = ""
         if arcade.are_polygons_intersecting(ball,down1) :
-            self.y = other.y - (15 + self.radius)
+            self.y = other.y - (15 + self.radius + 1)
             s += "y"
         if arcade.are_polygons_intersecting(ball,up1) :
-            self.y = other.y + (15 + self.radius)
+            self.y = other.y + (15 + self.radius + 1)
             if s == "":
                 s += "y"
         if arcade.are_polygons_intersecting(ball,left1) :
-            self.x = other.x - (30 + self.radius)
+            self.x = other.x - (30 + self.radius + 1)
             s += "x"
         if arcade.are_polygons_intersecting(ball,right1):
-            self.x = other.x + (30 + self.radius)
+            self.x = other.x + (30 + self.radius + 1)
             if len(s) == 1:
                 s += "x"
 
         return s
 
 class World:
-    def __init__(self,width,height):
+    def __init__(self,width,height,window):
         ''' Place everything on world except blocks '''
         self.width = width
         self.height = height
-        self.ball = Ball(self,300,20,20)
+        self.window = window
+        #self.ball = Ball(self,300,20,20)
+
+        self.balls = []
+        ball = Ball(self,300,20,20)
+        self.balls.append(ball)
+        self.ballX=-1
+
         self.arrow = Arrow(self,300,20,174)
+        self.arrowPlace = -1
         ''' END Place everything on world except blocks '''
         ''' Generate Blocks '''
         self.blockshp = GenerateBlock()
@@ -181,33 +212,63 @@ class World:
         ''' All about Score '''
         self.breakBlock =0
         self.score = 0
-        self.noOfBlock = len( self.blocks)
+        self.noOfBlock = len(self.blocks)
         self.blockleft = self.noOfBlock - self.breakBlock
+        self.noOfBall = 1
         ''' END All about Score '''
         
         
     def on_key_press(self, key, key_modifiers):
         global BLOCK_Y
         BLOCK_Y += 1
-        if key == arcade.key.SPACE and self.ball.running == False:
-            self.ball.shoot(self.arrow.angle)
-            print ("SPACE "+"VX = "+ str(self.ball.vx) + " VY = "+str(self.ball.vy) )
-            self.score += 1
+        if key == arcade.key.SPACE:
+            print("aa")
+            for ball in self.balls:
+                if self.ballX != -1 :
+                    ball.x = self.ballX
+                if not ball.running:
+                    ball.shoot(self.arrow.angle)
+                    #print ("SPACE "+"VX = "+ str(ball.vx) + " VY = "+str(ball.vy) )
+                    self.score += 1
+
+            self.arrowPlace =-1
+            self.ballX = -1
+
+
         if key == arcade.key.LEFT:
             self.arrow.move = 1
         if key == arcade.key.RIGHT:
             self.arrow.move = -1
+        
 
     def on_key_release(self, key, key_modifiers):
         if not key == arcade.key.LEFT or not key == arcade.key.RIGHT:
             self.arrow.move = 0
+
         
     def update(self,delta):
+        
+        '''Block Ball'''
+        for ball in self.balls:
+            if not ball.running:
+                continue
+            k = ball.update(self,delta)
+            if self.arrowPlace == -1:
+                self.arrowPlace = k
+                self.ballX = self.arrowPlace
+            breakblock = ball.check_collision_list(self,self.blocks)
+            if breakblock:
+                self.breakBlock += breakblock
+        self.blockleft = self.noOfBlock - self.breakBlock
+
+
+        '''END Block Ball'''
+
         ''' Arrow '''
-        arrowPlace = self.ball.update(delta)
-        if arrowPlace != -1:
-            self.arrow.x = arrowPlace
+        if self.arrowPlace != -1:
+            self.arrow.x = self.arrowPlace
         self.arrow.update(delta)
+
         '''END Arrow '''
         '''Block'''
 

@@ -7,13 +7,13 @@ SCREEN_HEIGHT = 800
 class ModelSprite(arcade.Sprite):
     def changeImageByHp(self):
         image = "images/block"
-        if self.hp == 0 :
+        if self.hp <= 0 :
             image += "white"
         elif self.hp == 9 :
             image += "+"
         else :
             image += str(self.hp)
-        image += ".png"        
+        image += ".png"  
         return image
 
     def __init__(self, *args, **kwargs):
@@ -23,25 +23,31 @@ class ModelSprite(arcade.Sprite):
         self.x = self.model.x
         self.y = self.model.y
         self.hp = self.model.hp
-        self.image = self.changeImageByHp()
+        self.image =  self.changeImageByHp() 
         
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
             self.angle = self.model.angle
             self.hp = self.model.hp
-            self.image = self.changeImageByHp()
+            #self.image = self.changeImageByHp()
+            self.image =self.changeImageByHp() 
 
     def draw(self):
         self.sync_with_model()
         super().draw()
 
 class SpaceGameWindow(arcade.Window):
+    
     def __init__(self,width,height):
         super().__init__(width,height)
         arcade.set_background_color(arcade.color.WHITE)
-        self.world = World(width, height)
-        self.ball_sprite = ModelSprite('images/ball.png',model=self.world.ball)
+        self.world = World(width, height,self)
+
+        #self.ball_sprite = ModelSprite('images/ball.png',model=self.world.ball)
+        self.ball_sprite = []
+        self.ball_sprite.append(ModelSprite('images/ball.png',model=self.world.balls[0]))
+
         self.arrow_sprite = ModelSprite('images/arrow1.png',model=self.world.arrow)
         
         self.block_sprite = []
@@ -50,12 +56,19 @@ class SpaceGameWindow(arcade.Window):
             
     def on_draw(self):
         arcade.start_render()
+        #for ball in self.ball_sprite:
+
         for block in self.block_sprite:
                 block.draw()
                 block = ModelSprite(block.image,model=block)
                 block.draw()
+            
         self.arrow_sprite.draw()
-        self.ball_sprite.draw()
+
+        for ball in self.ball_sprite:
+            #print(len(self.ball_sprite))
+            ball.draw()
+
         '''color: http://www.colorpicker.com/color-chart/'''
         arcade.draw_text("LEFT: "+str(self.world.blockleft),
                          self.width - 240, self.height - 30,
@@ -64,6 +77,12 @@ class SpaceGameWindow(arcade.Window):
         arcade.draw_text("SCORE: "+str(self.world.score),
                          self.width - 120, self.height - 30,
                          arcade.color.AZURE, 20)
+        
+        arcade.draw_text("Ball: "+str(self.world.noOfBall),
+                         0, self.height - 30,
+                         arcade.color.AZURE, 20)
+        
+
 
     def update(self,delta):
         self.world.update(delta)
@@ -73,6 +92,8 @@ class SpaceGameWindow(arcade.Window):
         self.world.on_key_release(key,key_modifiers)
     def check_for_collision(self,other):
         self.world.ball.check_for_collision(other)
+    def insert_ball(self, x):
+        self.ball_sprite.append(ModelSprite('images/ball.png',model=x))
     
 
 if __name__ == '__main__':
