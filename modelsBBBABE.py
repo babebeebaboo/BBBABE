@@ -52,6 +52,7 @@ class Ball(Model):
         self.running = running
 
     def shoot(self,angle):
+        print ("AA")
         self.running = True
         maxspeed = 20
         if angle == 180:
@@ -115,7 +116,11 @@ class Ball(Model):
 
                 if block.hp >= 8 :
                     block.hp = 0
-                    #world.noOfBall += 1
+                    world.noOfBall += 1
+                    
+                    ball = Ball(world,300, 20 - 20*(world.noOfBall-1) ,20)
+                    world.balls.append(ball)
+                    world.window.insert_ball(ball)
 
 
                 if block.hp <= 0 :
@@ -158,11 +163,17 @@ class Ball(Model):
         return s
 
 class World:
-    def __init__(self,width,height):
+    def __init__(self,width,height,window):
         ''' Place everything on world except blocks '''
         self.width = width
         self.height = height
-        self.ball = Ball(self,300,20,20)
+        self.window = window
+        #self.ball = Ball(self,300,20,20)
+
+        self.balls = []
+        ball = Ball(self,300,20,20)
+        self.balls.append(ball)
+
         self.arrow = Arrow(self,300,20,174)
         ''' END Place everything on world except blocks '''
         ''' Generate Blocks '''
@@ -177,20 +188,25 @@ class World:
         ''' All about Score '''
         self.breakBlock =0
         self.score = 0
-        self.noOfBlock = len( self.blocks)
+        self.noOfBlock = len(self.blocks)
         self.blockleft = self.noOfBlock - self.breakBlock
-        #self.noOfBall = 1
+        self.noOfBall = 1
         ''' END All about Score '''
         
     def on_key_press(self, key, key_modifiers):
-        if key == arcade.key.SPACE and self.ball.running == False:
-            self.ball.shoot(self.arrow.angle)
-            #print ("SPACE "+"VX = "+ str(self.ball.vx) + " VY = "+str(self.ball.vy) )
-            self.score += 1
+        
+        if key == arcade.key.SPACE:
+            for ball in self.balls:
+                if ball.running == False:
+                    ball.shoot(self.arrow.angle)
+                    #print ("SPACE "+"VX = "+ str(self.ball.vx) + " VY = "+str(self.ball.vy) )
+                    self.score += 1
+
         if key == arcade.key.LEFT:
             self.arrow.move = 1
         if key == arcade.key.RIGHT:
             self.arrow.move = -1
+        
 
     def on_key_release(self, key, key_modifiers):
         if not key == arcade.key.LEFT or not key == arcade.key.RIGHT:
@@ -198,14 +214,17 @@ class World:
         
     def update(self,delta):
         ''' Arrow '''
-        arrowPlace = self.ball.update(delta)
+        arrowPlace = self.balls[0].update(delta)
         if arrowPlace != -1:
             self.arrow.x = arrowPlace
         self.arrow.update(delta)
         '''END Arrow '''
-        '''Block'''
-        breakblock = self.ball.check_collision_list(self,self.blocks)
-        if breakblock:
-            self.breakBlock += breakblock
+        '''Block Ball'''
+        for ball in self.balls:
+            if ball.running == False:
+                continue
+            breakblock = ball.check_collision_list(self,self.blocks)
+            if breakblock:
+                self.breakBlock += breakblock
         self.blockleft = self.noOfBlock - self.breakBlock
-        '''END Block'''
+        '''END Block Ball'''

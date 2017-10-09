@@ -40,8 +40,12 @@ class SpaceGameWindow(arcade.Window):
     def __init__(self,width,height):
         super().__init__(width,height)
         arcade.set_background_color(arcade.color.WHITE)
-        self.world = World(width, height)
-        self.ball_sprite = ModelSprite('images/ball.png',model=self.world.ball)
+        self.world = World(width, height,self)
+
+        #self.ball_sprite = ModelSprite('images/ball.png',model=self.world.ball)
+        self.ball_sprite = []
+        self.ball_sprite.append(ModelSprite('images/ball.png',model=self.world.balls[0]))
+
         self.arrow_sprite = ModelSprite('images/arrow1.png',model=self.world.arrow)
         self.block_sprite = []
         for block in self.world.blocks:
@@ -49,12 +53,17 @@ class SpaceGameWindow(arcade.Window):
             
     def on_draw(self):
         arcade.start_render()
+        #for ball in self.ball_sprite:
+
         for block in self.block_sprite:
                 block.draw()
                 block = ModelSprite(block.image,model=block)
                 block.draw()
         self.arrow_sprite.draw()
-        self.ball_sprite.draw()
+
+        for ball in self.ball_sprite:
+            ball.draw()
+
         '''color: http://www.colorpicker.com/color-chart/'''
         arcade.draw_text("LEFT: "+str(self.world.blockleft),
                          self.width - 240, self.height - 30,
@@ -63,11 +72,11 @@ class SpaceGameWindow(arcade.Window):
         arcade.draw_text("SCORE: "+str(self.world.score),
                          self.width - 120, self.height - 30,
                          arcade.color.AZURE, 20)
-        '''
-        arcade.draw_text("Ball: "+str(self.world.score),
+        
+        arcade.draw_text("Ball: "+str(self.world.noOfBall),
                          0, self.height - 30,
                          arcade.color.AZURE, 20)
-        '''
+        
 
 
     def update(self,delta):
@@ -78,6 +87,8 @@ class SpaceGameWindow(arcade.Window):
         self.world.on_key_release(key,key_modifiers)
     def check_for_collision(self,other):
         self.world.ball.check_for_collision(other)
+    def insert_ball(self, x):
+        self.ball_sprite.append(ModelSprite('images/ball.png',model=x))
     
 
 if __name__ == '__main__':
