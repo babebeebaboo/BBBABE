@@ -1,8 +1,11 @@
-import arcade
+import arcade,sys
 from modelsBBBABE import World
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
+
+readfile = open('min.txt', 'r')
+min = readfile.readline()
 
 class ModelSprite(arcade.Sprite):
     def changeImageByHp(self):
@@ -69,17 +72,30 @@ class SpaceGameWindow(arcade.Window):
             ball.draw()
 
         '''color: http://www.colorpicker.com/color-chart/'''
+        '''
         arcade.draw_text("LEFT: "+str(self.world.blockleft),
                          self.width - 240, self.height - 30,
                          arcade.color.BITTERSWEET, 20)
-        
+        '''
         arcade.draw_text("SCORE: "+str(self.world.score),
                          self.width - 120, self.height - 30,
                          arcade.color.AZURE, 20)
+
+        arcade.draw_text("MIN: "+ min ,
+                         self.width - 240, self.height - 30,
+                         arcade.color.BITTERSWEET, 20)
         
         arcade.draw_text("Ball: "+str(self.world.noOfBall),
                          0, self.height - 30,
                          arcade.color.AZURE, 20)
+
+        if self.world.blockleft <= 0:
+            if self.world.score <= int(min):
+                writefile = open('min.txt','w')
+                writefile.write( str(self.world.score) )
+                writefile.close()
+                readfile.close()
+            sys.exit()
         
 
 

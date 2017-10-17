@@ -1,7 +1,5 @@
-import arcade.key
-import arcade
+import arcade,math,arcade.key
 from random import randint
-import math
 
 class Model:
     def __init__(self,world,x,y,vx=0,vy=0,angle=0,hp=0):
@@ -15,11 +13,9 @@ class Model:
 
 def GenerateBlock():
     a = [[randint(0,8) for x in range(0,8)] for y in range(17)]
-    a[randint(0,17)][randint(0,8)] = 9
-    a[randint(0,17)][randint(0,8)] = 9
-    a[randint(0,17)][randint(0,8)] = 9
-    a[randint(0,17)][randint(0,8)] = 9
-    a[randint(0,17)][randint(0,8)] = 9
+    #a = [[1 for x in range(0,8)] for y in range(17)]
+    for i in range(0,5):
+        a[randint(0,16)][randint(0,7)] = 9
     return a
     #return [[9 for x in range(0,8)] for y in range(17)]
 
@@ -153,11 +149,27 @@ class Ball(Model):
         return breakblock
 
     def collision(self,other):
-        down1 = ( (other.x - 29, other.y - 15),(other.x + 29, other.y - 15) , (other.x + 29, other.y-14), (other.x - 29, other.y-14))
-        up1 = ( (other.x - 29, other.y + 15),(other.x + 29, other.y + 15) , (other.x + 29, other.y+16), (other.x - 29, other.y+16))
-        left1 = ( (other.x - 30, other.y - 15),(other.x - 29, other.y -15) , (other.x - 29, other.y+15), (other.x - 30, other.y+15))
-        right1 = ( (other.x + 29, other.y -15),(other.x + 30, other.y - 15), (other.x + 30, other.y+15), (other.x + 29, other.y+15))
-        ball = ( (self.x - 10,self.y-10) , (self.x + 10,self.y- 10) , (self.x + 10,self.y+ 10) , (self.x - 10,self.y + 10))
+        down1 = ((other.x - 29, other.y - 15),
+                (other.x + 29, other.y - 15) , 
+                (other.x + 29, other.y-14), 
+                (other.x - 29, other.y-14))
+
+        up1 = ((other.x - 29, other.y + 15),
+                (other.x + 29, other.y + 15),
+                (other.x + 29, other.y+16), 
+                (other.x - 29, other.y+16))
+        left1 = ((other.x - 30, other.y - 15),
+                (other.x - 29, other.y -15), 
+                (other.x - 29, other.y+15), 
+                (other.x - 30, other.y+15))
+        right1 = ((other.x + 29, other.y -15),
+                    (other.x + 30, other.y - 15), 
+                    (other.x + 30, other.y+15), 
+                    (other.x + 29, other.y+15))
+        ball = ((self.x - 10,self.y-10), 
+                (self.x + 10,self.y- 10), 
+                (self.x + 10,self.y+ 10), 
+                (self.x - 10,self.y + 10))
         
         s = ""
         if arcade.are_polygons_intersecting(ball,down1) :
@@ -211,16 +223,21 @@ class World:
         ''' END All about Score '''
         
     def on_key_press(self, key, key_modifiers):
-        
+        score = 0
+        notrun = 0
         if key == arcade.key.SPACE:
             print("aa")
             for ball in self.balls:
-                if self.ballX != -1 :
-                    ball.x = self.ballX
                 if not ball.running:
-                    ball.shoot(self.arrow.angle)
-                    #print ("SPACE "+"VX = "+ str(ball.vx) + " VY = "+str(ball.vy) )
-                    self.score += 1
+                    notrun+=1
+            if notrun == self.noOfBall:
+                for ball in self.balls:
+                    if self.ballX != -1 :
+                        ball.x = self.ballX
+                    if not ball.running:
+                        ball.shoot(self.arrow.angle)
+                        #print ("SPACE "+"VX = "+ str(ball.vx) + " VY = "+str(ball.vy) )
+                        score = 1
 
             self.arrowPlace =-1
             self.ballX = -1
@@ -229,6 +246,7 @@ class World:
             self.arrow.move = 1
         if key == arcade.key.RIGHT:
             self.arrow.move = -1
+        self.score += score
         
 
     def on_key_release(self, key, key_modifiers):
