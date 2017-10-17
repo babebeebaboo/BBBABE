@@ -32,6 +32,7 @@ class ModelSprite(arcade.Sprite):
         image += ".png"  
         return image
 
+
     def __init__(self, *args, **kwargs):
         self.model = kwargs.pop('model', None)
  
@@ -41,6 +42,7 @@ class ModelSprite(arcade.Sprite):
         self.hp = self.model.hp
         self.image = self.changeImageByHp() 
         
+
     def sync_with_model(self):
         if self.model:
             self.set_position(self.model.x, self.model.y)
@@ -48,9 +50,11 @@ class ModelSprite(arcade.Sprite):
             self.hp = self.model.hp
             self.image =self.changeImageByHp() 
 
+
     def draw(self):
         self.sync_with_model()
         super().draw()
+
 
 class SpaceGameWindow(arcade.Window):
     
@@ -67,6 +71,7 @@ class SpaceGameWindow(arcade.Window):
         for block in self.world.blocks:
             self.block_sprite.append(ModelSprite(block.image,model=block))
             
+
     def on_draw(self):
         arcade.start_render()
 
@@ -99,6 +104,7 @@ class SpaceGameWindow(arcade.Window):
                 writefile.close()
                 readfile.close()
             sys.exit()
+
 
     def update(self,delta):
         self.world.update(delta)

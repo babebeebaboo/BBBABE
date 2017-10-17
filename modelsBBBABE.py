@@ -11,13 +11,16 @@ class Model:
         self.angle = angle
         self.hp = hp
 
+
 def GenerateBlock():
     a = [[randint(0,8) for x in range(0,8)] for y in range(17)]
     for i in range(0,5):
         a[randint(0,16)][randint(0,7)] = 9
     return a
 
+
 class Block(Model):
+
 
     def changeImageByHp(self):
         image = "images/block"
@@ -30,6 +33,7 @@ class Block(Model):
         image += ".png"        
         return image
 
+
     def __init__(self,world,x,y,hp,width=60,height=30,vx=0,vy=0,angle=0):
         super().__init__(world,x,y,vx,vy,angle,hp)
         self.width = width
@@ -41,10 +45,12 @@ class Arrow(Model):
         super().__init__(world,x,y,vx,vy,angle)
         self.move = move
 
+
     def update(self,delta):
         self.angle += self.move 
         if self.angle <= 0+5 or self.angle >= 180-5: 
             self.move *= 0
+
 
 class Ball(Model):
     def __init__(self,world,x,y,size,vx=0,vy=0,running = False):
@@ -53,6 +59,7 @@ class Ball(Model):
         self.radius = size/2
         self.running = running
         self.DefaultY = y
+
 
     def shoot(self,angle):
         self.running = True
@@ -69,6 +76,7 @@ class Ball(Model):
             self.vy = angle / 90 * maxspeed
         else :
             self.vy = (180 - angle) / 90 * maxspeed
+
 
     def update(self,world,delta):
         if self.y <= 20 and self.vy > 0:
@@ -104,6 +112,7 @@ class Ball(Model):
             return self.x
         else :
             return -1
+
 
     def check_collision_list(self,world,list):
         hit=0
@@ -146,6 +155,7 @@ class Ball(Model):
                 self.vy *= -1
 
         return breakblock
+
 
     def collision(self,other):
         down1 = ((other.x - 29, other.y - 15),
@@ -220,11 +230,12 @@ class World:
         self.noOfBall = 1
         ''' END All about Score '''
         
+
     def on_key_press(self, key, key_modifiers):
         score = 0
         notrun = 0
+
         if key == arcade.key.SPACE:
-            print("aa")
             for ball in self.balls:
                 if not ball.running:
                     notrun+=1
@@ -244,7 +255,7 @@ class World:
         if key == arcade.key.RIGHT:
             self.arrow.move = -1
         self.score += score
-        
+
 
     def on_key_release(self, key, key_modifiers):
         if not key == arcade.key.LEFT or not key == arcade.key.RIGHT:
@@ -252,7 +263,6 @@ class World:
 
         
     def update(self,delta):
-        
         '''Block Ball'''
         for ball in self.balls:
             if not ball.running:
@@ -265,7 +275,6 @@ class World:
             if breakblock:
                 self.breakBlock += breakblock
         self.blockleft = self.noOfBlock - self.breakBlock
-
 
         '''END Block Ball'''
 
