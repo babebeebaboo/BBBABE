@@ -1,4 +1,4 @@
-import arcade,math,arcade.key
+import arcade,arcade.key,math
 from random import randint
 
 class Model:
@@ -13,11 +13,9 @@ class Model:
 
 def GenerateBlock():
     a = [[randint(0,8) for x in range(0,8)] for y in range(17)]
-    #a = [[1 for x in range(0,8)] for y in range(17)]
     for i in range(0,5):
         a[randint(0,16)][randint(0,7)] = 9
     return a
-    #return [[9 for x in range(0,8)] for y in range(17)]
 
 class Block(Model):
 
@@ -42,6 +40,7 @@ class Arrow(Model):
     def __init__(self,world,x,y,angle,vx=0,vy=0,move=1):
         super().__init__(world,x,y,vx,vy,angle)
         self.move = move
+
     def update(self,delta):
         self.angle += self.move 
         if self.angle <= 0+5 or self.angle >= 180-5: 
@@ -58,11 +57,14 @@ class Ball(Model):
     def shoot(self,angle):
         self.running = True
         maxspeed = 20
+
         if angle == 180:
             angle -= 1
         if angle == 0:
             angle += 1
+
         self.vx = ( 90 - angle ) /90 *maxspeed
+
         if angle >=0 and angle <=90:
             self.vy = angle / 90 * maxspeed
         else :
@@ -120,17 +122,15 @@ class Ball(Model):
                         changeX += 1
                     if abs(self.vy) > abs(self.vx):
                         changeY += 1
-                #print ( "X "+"Ball: "+str(self.x) + " "+"Block: "+str(block.x) +" "+"Range: "+ str( abs(block.x - self.x) ) )
-                #print( "Y "+"Ball: "+str(self.y) + " "+"Block: "+str(block.y)+" "+"Range: "+ str( abs(block.y - self.y) ) )
-                
+
                 hit+=1
                 block.hp -= 1
 
                 if block.hp >= 8 :
                     block.hp = 0
                     world.noOfBall += 1
-                    
-                    ball = Ball(world,30, 19 - 50*(world.noOfBall-1) ,20)
+                    ball = Ball(world,30,
+                                69 - 50 * world.noOfBall ,20)
                     world.balls.append(ball)
                     world.window.insert_ball(ball)
 
@@ -145,7 +145,6 @@ class Ball(Model):
             if changeY >0:
                 self.vy *= -1
 
-            #print ("VX = "+ str(self.vx) + " VY = "+str(self.vy) +"\n")
         return breakblock
 
     def collision(self,other):
@@ -195,7 +194,6 @@ class World:
         self.width = width
         self.height = height
         self.window = window
-        #self.ball = Ball(self,300,20,20)
 
         self.balls = []
         ball = Ball(self,300,20,20)
@@ -236,7 +234,6 @@ class World:
                         ball.x = self.ballX
                     if not ball.running:
                         ball.shoot(self.arrow.angle)
-                        #print ("SPACE "+"VX = "+ str(ball.vx) + " VY = "+str(ball.vy) )
                         score = 1
 
             self.arrowPlace =-1
