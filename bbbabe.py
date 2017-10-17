@@ -4,6 +4,19 @@ from modelsBBBABE import World
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
 
+k=open('min.txt','a')
+k.close()
+
+readfileBeforeKeepScore = open('min.txt', 'r')
+minSC = readfileBeforeKeepScore.readline()
+
+if minSC == "":
+    writefile = open('min.txt','w')
+    writefile.write( str(100) )
+    writefile.close()
+
+readfileBeforeKeepScore.close()
+
 readfile = open('min.txt', 'r')
 min = readfile.readline()
 
