@@ -107,6 +107,7 @@ class SpaceGameWindow(arcade.Window):
             arcade.draw_text("SCORE = "+str(self.world.score),
                          self.width/2-130, self.height/2,
                          arcade.color.AZURE, 50)
+                         
             arcade.draw_text(" Press ESC To Quit ",
                          self.width/2-150, self.height/2 - 100,
                          arcade.color.CHARLESTON_GREEN, 30)
@@ -115,7 +116,6 @@ class SpaceGameWindow(arcade.Window):
                 arcade.draw_text("New Minimum Score!!!",
                          self.width/2-190, self.height/2 - 50,
                          arcade.color.BITTERSWEET, 30)
-                
 
                 writefile = open('min.txt','w')
                 writefile.write( str(self.world.score) )
