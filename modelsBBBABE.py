@@ -13,7 +13,9 @@ class Model:
 
 
 def GenerateBlock():
-    a = [[randint(0,8) for x in range(0,8)] for y in range(17)]
+
+    a = [[1 for x in range(0,8)] for y in range(17)]
+    #a = [[randint(0,8) for x in range(0,8)] for y in range(17)]
     for i in range(0,5):
         a[randint(0,16)][randint(0,7)] = 9
     return a
@@ -229,12 +231,12 @@ class World:
         self.blockleft = self.noOfBlock - self.breakBlock
         self.noOfBall = 1
         ''' END All about Score '''
-        
+        self.exit = False
 
     def on_key_press(self, key, key_modifiers):
         score = 0
         notrun = 0
-
+        self.exit = False
         if key == arcade.key.SPACE:
             for ball in self.balls:
                 if not ball.running:
@@ -255,6 +257,9 @@ class World:
         if key == arcade.key.RIGHT:
             self.arrow.move = -1
         self.score += score
+        if key == arcade.key.ESCAPE:
+            self.exit = True
+            
 
 
     def on_key_release(self, key, key_modifiers):

@@ -3,22 +3,28 @@ from modelsBBBABE import World
 
 SCREEN_WIDTH = 600
 SCREEN_HEIGHT = 800
+min=""
 
-k=open('min.txt','a')
-k.close()
 
-readfileBeforeKeepScore = open('min.txt', 'r')
-minSC = readfileBeforeKeepScore.readline()
+def ReadScore():
+    global min
+    k=open('min.txt','a')
+    k.close()
 
-if minSC == "":
-    writefile = open('min.txt','w')
-    writefile.write("100")
-    writefile.close()
+    readfileBeforeKeepScore = open('min.txt', 'r')
+    minSC = readfileBeforeKeepScore.readline()
 
-readfileBeforeKeepScore.close()
+    if minSC == "":
+        writefile = open('min.txt','w')
+        writefile.write("100")
+        writefile.close()
 
-readfile = open('min.txt', 'r')
-min = readfile.readline()
+    readfileBeforeKeepScore.close()
+
+    readfile = open('min.txt', 'r')
+    min = readfile.readline()
+    readfile.close()
+
 
 class ModelSprite(arcade.Sprite):
     def changeImageByHp(self):
@@ -98,11 +104,24 @@ class SpaceGameWindow(arcade.Window):
                          arcade.color.AZURE, 20)
 
         if self.world.blockleft <= 0:
+            arcade.draw_text("SCORE = "+str(self.world.score),
+                         self.width/2-130, self.height/2,
+                         arcade.color.AZURE, 50)
+            arcade.draw_text(" Press ESC To Quit ",
+                         self.width/2-150, self.height/2 - 100,
+                         arcade.color.CHARLESTON_GREEN, 30)
+
             if self.world.score <= int(min):
+                arcade.draw_text("New Minimum Score!!!",
+                         self.width/2-190, self.height/2 - 50,
+                         arcade.color.BITTERSWEET, 30)
+                
+
                 writefile = open('min.txt','w')
                 writefile.write( str(self.world.score) )
                 writefile.close()
-                readfile.close()
+                
+        if self.world.exit :
             sys.exit()
 
 
@@ -118,5 +137,6 @@ class SpaceGameWindow(arcade.Window):
         self.ball_sprite.append(ModelSprite('images/ball.png',model=x))
 
 if __name__ == '__main__':
+    ReadScore()
     windows = SpaceGameWindow(SCREEN_WIDTH,SCREEN_HEIGHT)
     arcade.run()
