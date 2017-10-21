@@ -48,7 +48,7 @@ class Arrow(Model):
     def update(self,delta):
         self.angle += self.move 
         if self.angle <= 0+5 or self.angle >= 180-5: 
-            self.move *= 0
+            self.move = 0
 
 
 class Ball(Model):
