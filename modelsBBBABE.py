@@ -1,6 +1,9 @@
 import arcade,arcade.key,math
 from random import randint
 
+BLOCK_X = 8
+BLOCK_Y = 1
+
 class Model:
     def __init__(self,world,x,y,vx=0,vy=0,angle=0,hp=0):
         self.x = x
@@ -18,7 +21,7 @@ def GenerateBlock():
     for i in range(0,5):
         a[randint(0,16)][randint(0,7)] = 9
     return a
-
+  
 
 class Block(Model):
     def changeImageByHp(self):
@@ -33,11 +36,17 @@ class Block(Model):
         return image
 
 
-    def __init__(self,world,x,y,hp,width=60,height=30,vx=0,vy=0,angle=0):
-        super().__init__(world,x,y,vx,vy,angle,hp)
+    def __init__(self,world,x,y,i,j,width=60,height=30,vx=0,vy=0,angle=0):
+        super().__init__(world,x,y,vx,vy,angle,hp = world.blockshp[i][j])
+        self.i = i
+        self.j = j
+
         self.width = width
         self.height = height
         self.image = self.changeImageByHp()
+
+    def update(self):
+        self.world.blockshp[self.i][self.j] = self.hp
 
 class Arrow(Model):
     def __init__(self,world,x,y,angle,vx=0,vy=0,move=1):
@@ -214,10 +223,10 @@ class World:
         ''' Generate Blocks '''
         self.blockshp = GenerateBlock()
         self.blocks = []
-        for j in range(0,8):
-            for i in range(0,16):
+        for j in range(0,BLOCK_X):
+            for i in range(0,BLOCK_Y):
                 if self.blockshp[i][j] > 0 :
-                    block = Block(self,j*60+90,i*30+285,self.blockshp[i][j])
+                    block = Block(self,j*60+90,i*30+285,i,j)
                     self.blocks.append(block)
         ''' END Generate Blocks '''
         ''' All about Score '''
@@ -227,12 +236,16 @@ class World:
         self.blockleft = self.noOfBlock - self.breakBlock
         self.noOfBall = 1
         ''' END All about Score '''
-        self.exit = False
 
+        
+        self.exit = False
     def on_key_press(self, key, key_modifiers):
+        global BLOCK_Y
+        BLOCK_Y += 1
         score = 0
         notrun = 0
         self.exit = False
+
         if key == arcade.key.SPACE:
             for ball in self.balls:
                 if not ball.running:
@@ -247,6 +260,7 @@ class World:
 
             self.arrowPlace = -1
             self.ballX = -1
+
 
         if key == arcade.key.LEFT:
             self.arrow.move = 1
@@ -281,4 +295,28 @@ class World:
         if self.arrowPlace != -1:
             self.arrow.x = self.arrowPlace
         self.arrow.update(delta)
+
         '''END Arrow '''
+        '''Block'''
+
+        for b in self.blocks:
+            b.update()
+            b.x = -100
+            b.y = -100
+
+
+        self.blocks = []
+        for j in range(0,BLOCK_X):
+            for i in range(0,BLOCK_Y):
+                if self.blockshp[i][j] > 0 :
+                    block = Block(self,j*60+90,i*30+285,i,j)
+                    self.blocks.append(block)
+
+
+
+
+        breakblock = self.ball.check_collision_list(self.blocks)
+        if breakblock:
+            self.breakBlock += breakblock
+        self.blockleft = self.noOfBlock - self.breakBlock
+        '''END Block'''
