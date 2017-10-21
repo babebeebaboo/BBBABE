@@ -48,7 +48,7 @@ class Arrow(Model):
     def update(self,delta):
         self.angle += self.move 
         if self.angle <= 0+5 or self.angle >= 180-5: 
-            self.move *= 0
+            self.move = 0
 
 
 class Ball(Model):
@@ -83,10 +83,10 @@ class Ball(Model):
             return -1
 
         if self.x < self.radius or self.x > self.world.width-self.radius:
-            self.vx = - self.vx
+            self.vx = -1 * self.vx
         
         if self.y < self.radius or self.y > self.world.height-self.radius:
-            self.vy = - self.vy
+            self.vy = -1 * self.vy
 
         self.x += self.vx
         self.y += self.vy
@@ -114,10 +114,10 @@ class Ball(Model):
 
 
     def check_collision_list(self,world,list):
-        hit=0
-        changeX=0
-        changeY=0
-        breakblock=0
+        hit = 0
+        changeX = 0
+        changeY = 0
+        breakblock = 0
         for block in list:
             collision = self.collision(block)
             if collision :
@@ -131,7 +131,7 @@ class Ball(Model):
                     if abs(self.vy) > abs(self.vx):
                         changeY += 1
 
-                hit+=1
+                hit += 1
                 block.hp -= 1
 
                 if block.hp >= 8 :
@@ -147,10 +147,10 @@ class Ball(Model):
                     block.x = -100
                     breakblock += 1
 
-        if hit>0:
-            if changeX >0:
+        if hit > 0:
+            if changeX > 0:
                 self.vx *= -1
-            if changeY >0:
+            if changeY > 0:
                 self.vy *= -1
 
         return breakblock
@@ -161,7 +161,6 @@ class Ball(Model):
                 (other.x + 29, other.y - 15), 
                 (other.x + 29, other.y-14), 
                 (other.x - 29, other.y-14))
-
         up1 = ((other.x - 29, other.y + 15),
                 (other.x + 29, other.y + 15),
                 (other.x + 29, other.y+16), 
@@ -207,7 +206,7 @@ class World:
         self.balls = []
         ball = Ball(self,300,20,20)
         self.balls.append(ball)
-        self.ballX=-1
+        self.ballX = -1
 
         self.arrow = Arrow(self,300,20,174)
         self.arrowPlace = -1
@@ -222,7 +221,7 @@ class World:
                     self.blocks.append(block)
         ''' END Generate Blocks '''
         ''' All about Score '''
-        self.breakBlock =0
+        self.breakBlock = 0
         self.score = 0
         self.noOfBlock = len(self.blocks)
         self.blockleft = self.noOfBlock - self.breakBlock
@@ -237,7 +236,7 @@ class World:
         if key == arcade.key.SPACE:
             for ball in self.balls:
                 if not ball.running:
-                    notrun+=1
+                    notrun += 1
             if notrun == self.noOfBall:
                 for ball in self.balls:
                     if self.ballX != -1 :
@@ -246,7 +245,7 @@ class World:
                         ball.shoot(self.arrow.angle)
                         score = 1
 
-            self.arrowPlace =-1
+            self.arrowPlace = -1
             self.ballX = -1
 
         if key == arcade.key.LEFT:
